@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en" class="theme-light">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>00 · Executive Overview — TM&amp;D &amp; Supply Chain Agentic Transformation</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;600;700&family=Google+Sans+Text:wght@400;500;700&family=Roboto+Mono:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="../assets/aurora.css"><link rel="stylesheet" href="../assets/deck_nav.css?v=2">
+<script src="../assets/deck_nav.js?v=15"></script>
+<style>
+  .cockpit { background: var(--surface); border: 1px solid var(--border-subtle); border-radius: 20px; padding: 24px; box-shadow: var(--shadow-md); margin: 24px 0; position: relative; overflow: hidden; }
+  .cockpit::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 3px; background: var(--gemini-spark); }
+  .prompt-bar { display: flex; align-items: center; gap: 12px; padding: 14px 18px; border-radius: 14px; background: var(--surface-sunk); border: 1px solid var(--border-subtle); font: 500 14.5px var(--font-display); }
+  .pill-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+  .q-pill { font: 500 12.5px var(--font-display); padding: 7px 14px; border-radius: 999px; border: 1px solid var(--border-subtle); background: var(--surface); color: var(--text); cursor: pointer; }
+  .q-pill.active { background: var(--g-blue); color: #FFF; border-color: var(--g-blue); }
+  .drawer { margin-top: 16px; padding: 16px 18px; border-radius: 14px; background: color-mix(in srgb, var(--g-blue) 7%, var(--surface)); border: 1px solid color-mix(in srgb, var(--g-blue) 30%, transparent); }
+  .meta-3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin-top: 22px; }
+  @media(max-width:900px){ .meta-3{ grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<header class="mast">
+  <a href="../index.html" style="display:flex;align-items:center;gap:12px;">
+    <img src="../assets/media/wip/image25.png" alt="Google Cloud"><span class="mast-rule"></span>
+    <span class="mast-tag">00 · Executive Overview</span>
+  </a>
+  <span class="mast-sp"></span>
+  <div class="mast-nav" id="mastSlideNav">
+    <button class="btn-ghost" id="themeToggle" type="button">Dark</button>
+  </div>
+</header>
+
+<main class="page-wrap">
+  <div class="page-kick"><i></i>Stage 00 · Sovereign Agentic Blueprint for TM&amp;D &amp; Supply Chain</div>
+  <h1 class="page-h1">From Reactive Dashboards to an Autonomous Value Stream</h1>
+  <p class="page-lede">Enterprise Trade Marketing &amp; Distribution (TM&amp;D) and Supply Chain engine reaches <b>7M+ retail outlets</b> across India. Gemini Enterprise layers <b>low-code / no-code AI agents</b> directly over SAP, DMS, SFA, WMS, and TMS—turning passive data into real-time field and logistics action.</p>
+
+  <div class="cockpit">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+      <span class="badge-pill badge-solid">✦ Interactive Gemini Enterprise Prompt Cockpit</span>
+      <span style="font:600 11px var(--font-mono);color:var(--text-muted);" id="cockpitLat">LATENCY: 380ms · GROUNDED ON SAP + DMS + BIGQUERY</span>
+    </div>
+    <div class="prompt-bar">
+      <span style="color:var(--blue-ink);font-size:18px;">✦</span>
+      <span id="cockpitPrompt">"Generate 08:15 AM Territory Morning Pulse for Lucknow ASM: flag lagging beats, WD stock-outs, and priority SKUs..."</span>
+    </div>
+    <div class="pill-row">
+      <button class="q-pill active" onclick="setCockpit('asm', this)">ASM Morning Pulse (TM&amp;D)</button>
+      <button class="q-pill" onclick="setCockpit('dsr', this)">DSR Vernacular Voice Pitch</button>
+      <button class="q-pill" onclick="setCockpit('cfa', this)">CFA Fair-Share Allocation</button>
+      <button class="q-pill" onclick="setCockpit('fleet', this)">MT/Q-Comm Slot &amp; Rerouter</button>
+    </div>
+    <div class="drawer" id="cockpitOut">
+      <div style="font:600 12px var(--font-mono);color:var(--blue-ink);margin-bottom:6px;" id="cockpitTag">TM&amp;D TERRITORY PULSE AGENT // NO-CODE GEMINI GEM</div>
+      <div style="font-size:14px;line-height:1.55;" id="cockpitBody">Analyzed overnight DMS sync across 18 Wholesale Dealers. Flagged <b>Staple Atta 5kg</b> stock-out risk at 3 key Lucknow WDs, identified 2 lagging rural beats (-14% MTD), and drafted 3 coaching actions for the 08:30 AM gate meeting.</div>
+    </div>
+  </div>
+
+  <div class="meta-3">
+    <div class="card"><div style="font:600 11px var(--font-mono);color:var(--blue-ink);">FULL VALUE STREAM</div><div style="font:600 15px var(--font-display);margin-top:6px;">Planning · Procurement · Mfg · DC · CPG Distribution · Reverse</div></div>
+    <div class="card"><div style="font:600 11px var(--font-mono);color:var(--green-ink);">AGENTIC EXECUTION</div><div style="font:600 15px var(--font-display);margin-top:6px;">Gemini Gems · Agent Studio · Multimodal Vision · Vernacular Voice</div></div>
+    <div class="card"><div style="font:600 11px var(--font-mono);color:var(--purple-ink);">NON-INVASIVE OVERLAY</div><div style="font:600 15px var(--font-display);margin-top:6px;">SAP S/4HANA · DMS / SFA · BigQuery · Google Maps Platform</div></div>
+  </div>
+
+  <footer class="deck-footer"><span>Slide 00 · Executive Overview</span><span class="footer-brand"><img src="../assets/media/wip/image25.png" alt="Google Cloud"><span style="width:1px;height:16px;background:#DADCE0;"></span><img src="../assets/media/gemini_enterprise_logo.svg" alt="Gemini Enterprise"></span></footer>
+</main>
+
+<script>
+  initDeckChrome({ root: '../' });
+  var COCKPIT = {
+    asm: {
+      prompt: '"Generate 08:15 AM Territory Morning Pulse for Lucknow ASM: flag lagging beats, WD stock-outs, and priority SKUs..."',
+      tag: 'TM&D TERRITORY PULSE AGENT // GEMINI GEM',
+      lat: 'LATENCY: 380ms · GROUNDED ON SAP + DMS + BIGQUERY',
+      body: 'Analyzed overnight DMS sync across 18 Wholesale Dealers. Flagged <b>Staple Atta 5kg</b> stock-out risk at 3 key Lucknow WDs, identified 2 lagging rural beats (-14% MTD), and drafted 3 coaching actions for the 08:30 AM gate meeting.'
+    },
+    dsr: {
+      prompt: '"Aaj ka beat batao — MG Road ke 38 kirana stores mein kaunsa focus SKU pitch karna hai?"',
+      tag: 'DSR VERNACULAR VOICE COPILOT // MOBILE GEMINI GEM',
+      lat: 'LATENCY: 290ms · HINDI / REGIONAL VOICE + OUTLET CRM',
+      body: 'Briefed DSR in Hindi: "Store #4 (Gupta General Store) has not billed <b>Premium Biscuits</b> in 14 days—pitch the ₹50 instant trade scheme. Collect ₹4,200 pending invoice at Store #12 before booking new order."'
+    },
+    cfa: {
+      prompt: '"CFA West shows 28% stock shortfall on Bingo! Tedhe Medhe against 38 WD indents. Run fair-share split..."',
+      tag: 'CS&L FAIR-SHARE ALLOCATION AGENT // AGENT STUDIO',
+      lat: 'LATENCY: 440ms · CFA ATP + 30-DAY WD VELOCITY',
+      body: 'Protected 100% of Tier-1 Blinkit/DMart POs and allocated remaining stock proportionally across 38 WDs by 30-day secondary velocity. Auto-sent WhatsApp ETA updates for next plant arrival.'
+    },
+    fleet: {
+      prompt: '"NH-48 highway closure detected. Reroute 4 Blinkit/DMart trucks and reschedule dock appointment slots..."',
+      tag: 'MT/Q-COMM SLOT & DYNAMIC REROUTER // MAPS + AGENT STUDIO',
+      lat: 'LATENCY: 310ms · GOOGLE MAPS API + RETAILER EDI',
+      body: 'Re-sequenced 4 trucks avoiding municipal no-entry curfews (saved 8.5% fuel) and proactively secured revised 4:30 PM dark-store dock slots—avoiding ₹3.8L in OTIF penalties.'
+    }
+  };
+  window.setCockpit = function (k, btn) {
+    document.querySelectorAll('.q-pill').forEach(function (b) { b.classList.remove('active'); });
+    btn.classList.add('active');
+    var d = COCKPIT[k];
+    document.getElementById('cockpitPrompt').textContent = d.prompt;
+    document.getElementById('cockpitTag').textContent = d.tag;
+    document.getElementById('cockpitLat').textContent = d.lat;
+    document.getElementById('cockpitBody').innerHTML = d.body;
+  };
+</script>
+</body></html>

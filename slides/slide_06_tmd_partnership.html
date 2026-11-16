@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en" class="theme-light">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>13 · ITC TM&amp;D × Google — Strategic AI &amp; Distribution Partnership</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;600;700&family=Google+Sans+Text:wght@400;500;700&family=Roboto+Mono:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="../assets/aurora.css">
+<link rel="stylesheet" href="../assets/deck_nav.css?v=2">
+<script src="../assets/deck_nav.js?v=15"></script>
+<style>
+  .takeaway-banner {
+    background: color-mix(in srgb, var(--g-blue) 8%, var(--surface));
+    border: 1px solid color-mix(in srgb, var(--g-blue) 28%, transparent);
+    border-left: 4px solid var(--g-blue);
+    border-radius: 14px;
+    padding: 16px 20px;
+    margin: 18px 0 22px;
+    font-size: 15px;
+    line-height: 1.55;
+    color: var(--text);
+  }
+  .takeaway-banner b { color: var(--blue-ink); }
+
+  .kpi-strip {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 22px;
+  }
+  .kpi-tile {
+    background: var(--surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: 14px;
+    padding: 16px 18px;
+    box-shadow: var(--shadow-sm);
+  }
+  .kpi-tile b {
+    display: block;
+    font: 700 24px/1.15 var(--font-display);
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+  .kpi-tile span {
+    font: 500 12px var(--font-body);
+    color: var(--text-muted);
+  }
+
+  .ws-table-wrap {
+    background: var(--surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    margin-bottom: 26px;
+  }
+  .ws-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+  }
+  .ws-table th {
+    font: 600 11px var(--font-mono);
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    background: var(--surface-sunk);
+    padding: 13px 18px;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+  .ws-table td {
+    padding: 16px 18px;
+    vertical-align: top;
+    border-bottom: 1px solid var(--border-subtle);
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--text);
+  }
+  .ws-table tr:last-child td { border-bottom: 0; }
+  .ws-table tr:hover td { background: color-mix(in srgb, var(--g-blue) 3%, var(--surface)); }
+  .ws-name {
+    font: 600 14.5px/1.35 var(--font-display);
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+  .ws-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font: 600 10.5px var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    padding: 3px 9px;
+    border-radius: 999px;
+    border: 1px solid transparent;
+  }
+  .ws-pill.blue  { color: var(--blue-ink);  background: rgba(49,134,255,.10); border-color: rgba(49,134,255,.32); }
+  .ws-pill.amber { color: #9A5B00;          background: rgba(254,199,0,.18);  border-color: rgba(254,199,0,.45); }
+  .ws-pill.green { color: var(--green-ink); background: rgba(0,175,87,.10);  border-color: rgba(0,175,87,.32); }
+
+  .sec-head {
+    font: 600 12px var(--font-mono);
+    letter-spacing: .09em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin: 6px 0 12px;
+  }
+
+  .ws-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  .ws-card {
+    background: var(--surface);
+    border: 1px solid var(--border-subtle);
+    border-top: 3px solid var(--g-blue);
+    border-radius: 16px;
+    padding: 20px 22px;
+    box-shadow: var(--shadow-sm);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .ws-card.c-green { border-top-color: var(--g-green); }
+  .ws-card.c-amber { border-top-color: var(--g-yellow); }
+  .ws-card.c-cyan  { border-top-color: #00ACC1; }
+
+  .ws-card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .ws-card-num {
+    font: 700 11px var(--font-mono);
+    color: var(--text-muted);
+    letter-spacing: .08em;
+    text-transform: uppercase;
+  }
+  .ws-card h3 {
+    margin: 3px 0 0;
+    font: 600 17px/1.3 var(--font-display);
+    color: var(--text);
+  }
+  .ws-detail-list {
+    margin: 0;
+    padding-left: 18px;
+    display: grid;
+    gap: 6px;
+    font-size: 13.5px;
+    line-height: 1.5;
+    color: var(--text-muted);
+  }
+  .ws-detail-list b { color: var(--text); }
+  .ws-next {
+    margin-top: auto;
+    padding: 10px 13px;
+    border-radius: 10px;
+    background: var(--surface-sunk);
+    border: 1px solid var(--border-subtle);
+    font-size: 13px;
+    line-height: 1.45;
+    color: var(--text);
+  }
+  .ws-next strong {
+    font: 600 10.5px var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    color: var(--blue-ink);
+    display: block;
+    margin-bottom: 2px;
+  }
+
+  @media (max-width: 960px) {
+    .kpi-strip { grid-template-columns: repeat(2, 1fr); }
+    .ws-grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 680px) {
+    .kpi-strip { grid-template-columns: 1fr; }
+    .ws-table-wrap { overflow-x: auto; }
+  }
+</style>
+</head>
+<body>
+
+<header class="mast">
+  <a href="../index.html" style="display:flex;align-items:center;gap:12px;">
+    <img src="../assets/media/wip/image25.png" alt="Google Cloud">
+    <span class="mast-rule"></span>
+    <span class="mast-tag">13 · Strategic Partnership</span>
+  </a>
+  <span class="mast-sp"></span>
+  <div class="mast-nav" id="mastSlideNav">
+    <button class="btn-ghost" id="themeToggle" type="button">Dark</button>
+  </div>
+</header>
+
+<main class="page-wrap">
+  <div class="page-kick"><i></i>Slide 13 · Active Joint Workstreams, Current Status &amp; Next Steps · November 2026</div>
+  <h1 class="page-h1">ITC TM&amp;D × Google — Strategic AI &amp; Distribution Partnership</h1>
+  <p class="page-lede">Executive alignment view for TM&amp;D leadership covering active joint initiatives across last-mile logistics, frontline SFA voice intelligence, Q-Com / E-Com optimization, and Gemini Enterprise scale-up.</p>
+
+  <div class="takeaway-banner">
+    <b>Key Takeaway:</b> ITC TM&amp;D and Google are advancing <b>4 joint workstreams</b> across logistics, frontline SFA voice intelligence, Q-Com/E-Com optimization, and Gemini Enterprise adoption.
+  </div>
+
+  <div class="sec-head">Active Joint Workstreams — Executive Summary</div>
+  <div class="ws-table-wrap">
+    <table class="ws-table">
+      <thead>
+        <tr>
+          <th style="width:27%;">Workstream</th>
+          <th style="width:33%;">Business Objective</th>
+          <th style="width:40%;">Current Status &amp; Next Step</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <div class="ws-name">1. Offline Salesman Pitch (SFA Voice)</div>
+            <span class="ws-pill amber">POC Execution Next</span>
+          </td>
+          <td>Capture store-front pitches on low-end Android SFA; nudge on missed SKUs &amp; schemes.</td>
+          <td>
+            Architecture shared and agreed; discussion with partner <b>Wohlig Transformations</b>.<br>
+            <b>Next:</b> Execution of the POC.
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <div class="ws-name">2. AI Control Tower (E-Com / Q-Com Planning)</div>
+            <span class="ws-pill blue">Solution Design Ready</span>
+          </td>
+          <td>Eliminate Q-Com OOS ad waste &amp; unify marketing/supply budgets (“One Wallet”).</td>
+          <td>
+            SOW &amp; tech alignment held ; Solution Design draft ready.<br>
+            <b>Next:</b> Finalize SOW response &amp; pilot.
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <div class="ws-name">3. Gemini Enterprise (GE) &amp; Sales Enablement</div>
+            <span class="ws-pill green">Cohort Live · 74%+ Retention</span>
+          </td>
+          <td>Scale AI workflows across TM&amp;D &amp; enable sales workforce training.</td>
+          <td>
+            Gamethon &amp; cohort live (400+ custom agents built across ITC, 74%+ weekly retention); Sales Enablement outreach.<br>
+            <b>Next:</b> Discussion with TM&amp;D teams.
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <div class="ws-name">4. Last-Mile Delivery (LMD) &amp; Route/Load Optimization</div>
+            <span class="ws-pill blue">Deep-Dive Syncs Underway</span>
+          </td>
+          <td>Maximize truck fill-rate, D+1 SLA compliance &amp; depot-to-retail efficiency.</td>
+          <td>
+            Briefing note shared by ITC ; POV shared by Google.<br>
+            <b>Next:</b> Next set of discussions.
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="sec-head">Workstream Deep-Dive: Operational Scope &amp; Immediate Next Steps</div>
+  <div class="ws-grid">
+    <article class="ws-card c-amber">
+      <div class="ws-card-top">
+        <div>
+          <div class="ws-card-num">Workstream 01 · Frontline Field Force</div>
+          <h3>Offline Salesman Pitch (SFA Voice)</h3>
+        </div>
+        <span class="ws-pill amber">Partner: Wohlig</span>
+      </div>
+      <ul class="ws-detail-list">
+        <li><b>Focus Areas:</b> Offline-resilient vernacular voice capture on low-end Android SFA handsets during store-front kirana and outlet visits.</li>
+        <li><b>Value Levers:</b> Real-time salesman nudges on missed hero SKUs and active trade schemes, higher line-per-call conversion, and zero manual post-visit logging.</li>
+        <li><b>Milestones:</b> Reference architecture shared and agreed; integration alignment active with implementation partner <b>Wohlig Transformations</b>.</li>
+      </ul>
+      <div class="ws-next">
+        <strong>Immediate Next Step</strong>
+        Execute the field POC on target low-end Android SFA devices and validate vernacular pitch-to-nudge latency.
+      </div>
+    </article>
+
+    <article class="ws-card c-cyan">
+      <div class="ws-card-top">
+        <div>
+          <div class="ws-card-num">Workstream 02 · Digital Commerce</div>
+          <h3>AI Control Tower (E-Com / Q-Com Planning)</h3>
+        </div>
+        <span class="ws-pill blue">SOW &amp; Design Ready</span>
+      </div>
+      <ul class="ws-detail-list">
+        <li><b>Focus Areas:</b> Dark-store and marketplace stock-out sensing coupled with automated ad-spend throttling to stop out-of-stock (OOS) media burn.</li>
+        <li><b>Value Levers:</b> Unified marketing &amp; supply budget governance (<b>“One Wallet”</b>), higher ROAS, and protected Blinkit/Zepto/Instamart availability.</li>
+        <li><b>Milestones:</b> SOW &amp; technical alignment sessions held; Solution Design draft completed and ready for review.</li>
+      </ul>
+      <div class="ws-next">
+        <strong>Immediate Next Step</strong>
+        Finalize SOW commercial/technical response, lock data feed connectors, and kick off the Q-Com / E-Com pilot.
+      </div>
+    </article>
+
+    <article class="ws-card c-green">
+      <div class="ws-card-top">
+        <div>
+          <div class="ws-card-num">Workstream 03 · Workforce Scale &amp; Adoption</div>
+          <h3>Gemini Enterprise (GE) &amp; Sales Enablement</h3>
+        </div>
+        <span class="ws-pill green">400+ Agents Live</span>
+      </div>
+      <ul class="ws-detail-list">
+        <li><b>Focus Areas:</b> Scaling daily AI workflows across ASMs, DSRs, CFA operations, and CS&amp;L planners alongside role-play &amp; scheme-mastery sales training.</li>
+        <li><b>Value Levers:</b> Rapid citizen-builder momentum with <b>400+ custom agents built across ITC</b> and sustained <b>74%+ weekly cohort retention</b>.</li>
+        <li><b>Milestones:</b> Gamethon &amp; builder cohort actively running; dedicated Sales Enablement outreach initiated.</li>
+      </ul>
+      <div class="ws-next">
+        <strong>Immediate Next Step</strong>
+        Hold focused adoption and training rollout discussions with TM&amp;D regional and functional teams.
+      </div>
+    </article>
+
+    <article class="ws-card">
+      <div class="ws-card-top">
+        <div>
+          <div class="ws-card-num">Workstream 04 · Logistics &amp; Secondary Dispatch</div>
+          <h3>Last-Mile Delivery (LMD) &amp; Route/Load Optimization</h3>
+        </div>
+        <span class="ws-pill blue">Nov Syncs</span>
+      </div>
+      <ul class="ws-detail-list">
+        <li><b>Focus Areas:</b> Depot-to-retail and WD beat sequencing, multi-SKU vehicle cube/weight utilization, and D+1 delivery SLA adherence across high-density routes.</li>
+        <li><b>Value Levers:</b> Higher truck fill-rates, reduced empty-mile/drop cost per case, and fewer missed retail delivery windows.</li>
+        <li><b>Milestones:</b> Briefing note shared by ITC; POV discussed by Google.</li>
+      </ul>
+      <div class="ws-next">
+        <strong>Immediate Next Step</strong>
+        Finalize target pilot depot(s), lane scope, and baseline fill-rate / D+1 KPIs for pilot execution.
+      </div>
+    </article>
+  </div>
+
+  <footer class="deck-footer">
+    <span>Slide 13 · ITC TM&amp;D × Google — Strategic AI &amp; Distribution Partnership</span>
+    <span class="footer-brand">
+      <img src="../assets/media/wip/image25.png" alt="Google Cloud">
+      <span style="width:1px;height:16px;background:#DADCE0;"></span>
+      <img src="../assets/media/gemini_enterprise_logo.svg" alt="Gemini Enterprise">
+    </span>
+  </footer>
+</main>
+
+<script>
+  initDeckChrome({ root: '../' });
+</script>
+</body>
+</html>

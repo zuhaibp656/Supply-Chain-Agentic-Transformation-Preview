@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en" class="theme-light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Agent Architecture &amp; Details — Supply Chain Agentic Transformation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;600;700&family=Roboto+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/aurora.css">
+<link rel="stylesheet" href="../assets/deck_nav.css?v=2">
+<script src="../assets/deck_nav.js?v=15"></script>
+<script src="../data/supply_chain_data.js?v=14"></script>
+<script src="../data/live_agents_registry.js?v=1"></script>
+<script src="../data/persona_and_agent_details.js?v=1"></script>
+<style>
+  :root { --accent: var(--g-blue); --accent-soft: rgba(49,134,255,.11); --wrap: 1380px; --font: var(--font-display); --mono: var(--font-mono); }
+  .wrap { max-width: var(--wrap); margin: 0 auto; padding: 0 max(20px, 2.8vw); }
+
+  .suite-switcher { background: var(--surface); border-bottom: 1px solid var(--border-subtle); padding: 10px 0; }
+  .sw-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .sw-lbl { font: 700 11px var(--mono); color: var(--text-muted); text-transform: uppercase; letter-spacing: .08em; margin-right: 4px; }
+  .sw-chip { display: inline-flex; align-items: center; gap: 7px; padding: 5px 13px; border-radius: 999px; border: 1px solid var(--border-subtle); background: var(--surface); color: var(--text); text-decoration: none; font: 600 12px var(--font); transition: all .16s; }
+  .sw-chip:hover { border-color: var(--accent); transform: translateY(-1px); }
+  .sw-chip.is-on { background: var(--accent-soft); border-color: var(--accent); color: var(--blue-ink); }
+  .sw-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--sc, var(--g-blue)); }
+
+  main.page-body { padding: 24px 0 72px; }
+  .ab-hero {
+    position: relative; overflow: hidden; border-radius: 24px; padding: 26px 28px;
+    background: linear-gradient(135deg, color-mix(in srgb, var(--ac, #3186FF) 12%, var(--surface)) 0%, var(--surface) 58%, color-mix(in srgb, #4B31E3 8%, var(--surface)) 100%);
+    border: 1.5px solid color-mix(in srgb, var(--ac, #3186FF) 34%, var(--border-subtle));
+    box-shadow: var(--shadow-md);
+    display: grid; grid-template-columns: 1.35fr auto; gap: 24px; align-items: center;
+  }
+  .ab-hero::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 5px; background: linear-gradient(90deg, #3186FF 0%, #4B31E3 35%, #00AF57 70%, #FEC700 100%); }
+  @media (max-width: 920px) { .ab-hero { grid-template-columns: 1fr; } }
+
+  .ab-badges { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 10px; align-items: center; }
+  .pill { font: 700 10.5px var(--mono); padding: 4px 10px; border-radius: 999px; background: var(--surface); border: 1px solid var(--border-subtle); color: var(--text-muted); }
+  .pill.p0 { background: rgba(252,65,61,.13); border-color: rgba(252,65,61,.32); color: #C62A27; }
+  .pill.p1 { background: rgba(254,199,0,.22); border-color: rgba(254,199,0,.45); color: #8A6200; }
+  .plive {
+    display: inline-flex; align-items: center; gap: 5px;
+    font: 700 10px/1 var(--mono); letter-spacing: .06em; text-transform: uppercase;
+    color: #FFF; background: var(--g-green); border-radius: 999px; padding: 5px 10px;
+    box-shadow: 0 0 0 3px rgba(0, 175, 87, .16);
+  }
+  .plive::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: #FFF; animation: livePulse 1.6s ease-in-out infinite; }
+  @keyframes livePulse { 0%,100% { box-shadow: 0 0 0 0 rgba(255,255,255,.9); } 50% { box-shadow: 0 0 0 4px rgba(255,255,255,0); } }
+
+  .ab-title { font-size: clamp(24px, 2.7vw, 34px); font-weight: 700; letter-spacing: -.02em; margin: 0 0 6px; line-height: 1.12; color: var(--text); }
+  .ab-owner { font-size: 14.5px; font-weight: 600; color: var(--ac, #3186FF); margin: 0 0 10px; }
+  .ab-owner a { color: inherit; text-decoration: none; }
+  .ab-owner a:hover { text-decoration: underline; }
+  .ab-summary { font-size: 14.5px; line-height: 1.56; color: var(--text); margin: 0 0 16px; max-width: 72ch; }
+
+  .ab-cta-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+  .cta-pill { display: inline-flex; align-items: center; gap: 8px; text-decoration: none; font: 700 13px var(--font); padding: 10px 18px; border-radius: 999px; transition: transform .18s; }
+  .cta-pill:hover { transform: translateY(-2px); }
+  .cta-pill.demo { background: color-mix(in srgb, var(--ac, #3186FF) 13%, var(--surface)); border: 1.5px solid color-mix(in srgb, var(--ac, #3186FF) 42%, transparent); color: var(--blue-ink); }
+  .cta-pill.ge { background: linear-gradient(135deg, #3186FF 0%, #4B31E3 100%); color: #fff; border: 1.5px solid transparent; box-shadow: 0 8px 20px rgba(49,134,255,.26); }
+
+  .ab-kpis { display: flex; gap: 12px; flex-wrap: wrap; }
+  .ab-kpi { min-width: 132px; padding: 15px 18px; border-radius: 18px; text-align: center; background: var(--surface); border: 1px solid var(--border-subtle); box-shadow: var(--shadow-sm); }
+  .ab-kpi b { display: block; font-size: 22px; font-weight: 700; line-height: 1.15; margin-bottom: 2px; color: var(--text); }
+  .ab-kpi span { font: 700 10px var(--mono); text-transform: uppercase; letter-spacing: .08em; color: var(--text-muted); }
+
+  .sec-title { font: 700 18px var(--font); margin: 26px 0 12px; color: var(--text); }
+  .arch-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
+  @media (max-width: 960px) { .arch-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 560px) { .arch-grid { grid-template-columns: 1fr; } }
+  .arch-card {
+    background: var(--surface); border: 1px solid var(--border-subtle); border-top: 4px solid var(--sc, #3186FF);
+    border-radius: 16px; padding: 16px; box-shadow: var(--shadow-sm);
+  }
+  .arch-num { font: 700 10.5px var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--sc, #3186FF); margin-bottom: 6px; }
+  .arch-h { font: 700 15px var(--font); margin: 0 0 6px; color: var(--text); }
+  .arch-p { font: 400 13px/1.5 var(--font-body); color: var(--text-muted); margin: 0; }
+
+  .tech-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 16px; margin-top: 20px; }
+  @media (max-width: 860px) { .tech-grid { grid-template-columns: 1fr; } }
+  .panel { background: var(--surface); border: 1px solid var(--border-subtle); border-radius: 18px; padding: 18px 20px; box-shadow: var(--shadow-sm); }
+  .prompt-btn {
+    display: block; width: 100%; text-align: left; padding: 9px 12px; border-radius: 10px; margin-top: 8px;
+    background: var(--surface-sunk); border: 1px solid var(--border-subtle); color: var(--text);
+    font: 400 13px/1.45 var(--font-body); cursor: pointer;
+  }
+  .prompt-btn:hover { border-color: var(--g-blue); }
+</style>
+</head>
+<body>
+
+<header class="mast">
+  <a href="../index.html" style="display:flex;align-items:center;gap:12px;">
+    <img src="../assets/media/wip/image25.png" alt="Google Cloud">
+    <span class="mast-rule"></span>
+    <span class="mast-tag">Agent Architecture &amp; Tech Details</span>
+  </a>
+  <span class="mast-sp"></span>
+  <div class="mast-nav" id="mastSlideNav">
+    <button class="btn-ghost" id="themeToggle" type="button">Dark</button>
+  </div>
+</header>
+
+<section class="suite-switcher">
+  <div class="wrap" style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
+    <div class="sw-row" id="suiteSwitcher" style="flex:1;"></div>
+    <a class="btn-ghost" id="backPersonaBtn" href="persona_map.html" style="white-space:nowrap;">← Back to Persona Dossier</a>
+  </div>
+</section>
+
+<main class="wrap page-body" id="agentRoot"></main>
+
+<script>
+  initDeckChrome({ root: '../', prev: 'persona_map.html', next: 'build_01_how.html' });
+
+  (function () {
+    var PDETAILS = window.SC_PERSONA_DETAILS || {};
+    var ADETAILS = window.SC_AGENT_DETAILS || {};
+    var qs = new URLSearchParams(location.search);
+    var reqAg = qs.get('agent') || 'Load Consolidation Agent';
+    var reqPer = qs.get('persona') || '';
+
+    var ag = ADETAILS[reqAg.toLowerCase()];
+    if (!ag) {
+      var foundKey = Object.keys(ADETAILS).find(function (k) {
+        return ADETAILS[k].liveId === reqAg || k.indexOf(reqAg.toLowerCase()) !== -1;
+      });
+      ag = foundKey ? ADETAILS[foundKey] : ADETAILS[Object.keys(ADETAILS)[0]];
+    }
+    var p = PDETAILS[reqPer || (ag && ag.personaId)] || PDETAILS[Object.keys(PDETAILS)[0]];
+    var backBtn = document.getElementById('backPersonaBtn');
+    if (p && backBtn) {
+      backBtn.href = 'persona_dossier.html?id=' + encodeURIComponent(p.id);
+      backBtn.textContent = '← ' + p.persona + ' Dossier';
+    }
+
+    var swEl = document.getElementById('suiteSwitcher');
+    var ACC = ['#3186FF', '#4B31E3', '#00AF57', '#0A7684', '#E65100'];
+    if (p && p.suiteNames) {
+      swEl.innerHTML = '<span class="sw-lbl">' + p.persona + ' Suite:</span>' +
+        p.suiteNames.map(function (nm, idx) {
+          var isOn = nm.toLowerCase() === ag.name.toLowerCase();
+          return '<a class="sw-chip ' + (isOn ? 'is-on' : '') + '" style="--sc:' + ACC[idx % ACC.length] + ';" href="agent_details.html?agent=' + encodeURIComponent(nm) + '&persona=' + encodeURIComponent(p.id) + '">' +
+            '<span class="sw-dot"></span><span>' + nm + '</span></a>';
+        }).join('');
+    }
+
+    var isLive = Boolean(ag.liveInGE);
+    var pCls = (ag.priority || '').indexOf('P0') === 0 ? 'p0' : 'p1';
+    var root = document.getElementById('agentRoot');
+
+    root.innerHTML =
+      '<section class="ab-hero" style="--ac:' + (ag.pillarColor || '#3186FF') + ';">' +
+        '<div>' +
+          '<div class="ab-badges">' +
+            '<span class="pill ' + pCls + '">' + ag.priority + '</span>' +
+            '<span class="pill">' + ag.pillarTitle + ' · ' + ag.subprocess + '</span>' +
+            (isLive ? '<span class="plive">Live in Gemini Enterprise</span>' : '<span class="pill">Blueprint</span>') +
+          '</div>' +
+          '<h1 class="ab-title">' + (ag.geDisplayName || ag.name) + '</h1>' +
+          '<div class="ab-owner">Persona Owner: <a href="persona_dossier.html?id=' + encodeURIComponent(ag.personaId) + '">' + ag.personaName + ' →</a></div>' +
+          '<p class="ab-summary"><b>Problem Solved:</b> ' + ag.problem + '<br><b>Outcome:</b> ' + ag.outcome + '</p>' +
+          '<div class="ab-cta-row">' +
+            (isLive ? (
+              '<a class="cta-pill ge" href="' + ag.geUrl + '" target="_blank" rel="noopener noreferrer">Open in Gemini Enterprise &#8599;</a>' +
+              '<a class="cta-pill demo" href="demo_stage.html?agent=' + encodeURIComponent(ag.liveId || ag.name) + '">&#9654; Watch Demo Stage</a>'
+            ) : '<span class="pill">Staged Blueprint · Ready for Build</span>') +
+          '</div>' +
+        '</div>' +
+        '<div class="ab-kpis">' +
+          '<div class="ab-kpi"><b style="color:var(--green-ink);font-size:16px;">' + (ag.sumanImpact || ag.outcome) + '</b><span>Target Impact</span></div>' +
+          '<div class="ab-kpi"><b style="font-size:15px;">' + ag.model + '</b><span>Global Endpoint</span></div>' +
+        '</div>' +
+      '</section>' +
+      '<h2 class="sec-title" style="display:flex;align-items:center;gap:8px;"><img src="../assets/media/models/gemini-color.svg" alt="" style="width:18px;height:18px;"><span>4-Stage Runtime Architecture &amp; Coexistence Boundary</span></h2>' +
+      '<div class="arch-grid">' +
+        '<div class="arch-card" style="--sc:#3186FF;"><div class="arch-num" style="display:flex;align-items:center;justify-content:space-between;"><span>01 · READS</span><img src="../assets/media/gcp/BigQuery.svg" alt="BigQuery" style="width:18px;height:18px;"></div><h3 class="arch-h">Enterprise Signals</h3><p class="arch-p">' + ag.reads + '</p></div>' +
+        '<div class="arch-card" style="--sc:#4B31E3;"><div class="arch-num" style="display:flex;align-items:center;justify-content:space-between;"><span>02 · REASONS &amp; SOLVES</span><img src="../assets/media/gcp/VertexAI.svg" alt="Vertex AI" style="width:18px;height:18px;"></div><h3 class="arch-h">Deterministic Math</h3><p class="arch-p">' + ag.does + '</p></div>' +
+        '<div class="arch-card" style="--sc:#00AF57;"><div class="arch-num" style="display:flex;align-items:center;justify-content:space-between;"><span>03 · RETURNS</span><img src="../assets/media/gcp/Agents.svg" alt="Agents" style="width:18px;height:18px;"></div><h3 class="arch-h">Actionable Output</h3><p class="arch-p">' + ag.returns + '</p></div>' +
+        '<div class="arch-card" style="--sc:#FC413D;"><div class="arch-num" style="display:flex;align-items:center;justify-content:space-between;"><span>04 · STOPS AT</span><img src="../assets/media/gcp/SecurityCommandCenter.svg" alt="Security" style="width:18px;height:18px;"></div><h3 class="arch-h">Human Sign-Off Gate</h3><p class="arch-p">' + ag.stopsAt + '</p></div>' +
+      '</div>' +
+      '<div class="tech-grid">' +
+        '<div class="panel">' +
+          '<div style="display:flex;justify-content:space-between;align-items:center;"><h3 style="margin:0;font:700 16px var(--font);">Sample Business Starter Prompts (Click to Copy)</h3><span id="pToast" style="font:600 11px var(--mono);color:var(--green-ink);display:none;">Copied!</span></div>' +
+          (ag.starterPrompts || []).map(function (pr, idx) {
+            return '<button type="button" class="prompt-btn" data-pidx="' + idx + '">"' + pr + '"</button>';
+          }).join('') +
+        '</div>' +
+        '<div class="panel">' +
+          '<h3 style="margin:0 0 10px;font:700 16px var(--font);">Google Cloud &amp; Governance Footprint</h3>' +
+          '<p style="margin:0 0 8px;font-size:13px;color:var(--text-muted);"><b>Connected Systems:</b> ' + (ag.sources || []).join(' · ') + '</p>' +
+          '<p style="margin:0 0 8px;font-size:13px;color:var(--text-muted);"><b>Safety Envelope:</b> ' + ag.safetyEnvelope + '</p>' +
+          '<p style="margin:0;font-size:13px;color:var(--text-muted);"><b>Execution Runtime:</b> Vertex AI Agent Engine + Gemini Enterprise (Global `location="global"`)</p>' +
+        '</div>' +
+      '</div>' +
+      '<footer class="deck-footer" style="margin-top:32px;"><span>Agent Architecture &amp; Tech Details</span><span class="footer-brand"><img src="../assets/media/wip/image25.png" alt="Google Cloud"><span style="width:1px;height:16px;background:#DADCE0;"></span><img src="../assets/media/gemini_enterprise_logo.svg" alt="Gemini Enterprise"></span></footer>';
+
+    root.querySelectorAll('.prompt-btn').forEach(function (b) {
+      b.addEventListener('click', function () {
+        var txt = (ag.starterPrompts || [])[Number(b.dataset.pidx)] || '';
+        if (navigator.clipboard && txt) navigator.clipboard.writeText(txt);
+        var t = document.getElementById('pToast');
+        t.style.display = 'inline';
+        setTimeout(function () { t.style.display = 'none'; }, 1400);
+      });
+    });
+  })();
+</script>
+</body>
+</html>

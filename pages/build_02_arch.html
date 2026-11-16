@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" class="theme-light">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>09 · Reference Architecture — Supply Chain Agentic Transformation</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;600;700&family=Google+Sans+Text:wght@400;500;700&family=Roboto+Mono:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="../assets/aurora.css"><link rel="stylesheet" href="../assets/deck_nav.css?v=2">
+<script src="../assets/deck_nav.js?v=15"></script>
+<style>.arch-layers{display:grid;gap:14px;margin-top:24px;}.layer{background:var(--surface);border:1px solid var(--border-subtle);border-radius:16px;padding:18px 22px;display:grid;grid-template-columns:220px 1fr;gap:18px;align-items:center;}.layer-lbl{font:600 12px var(--font-mono);text-transform:uppercase;letter-spacing:1px;color:var(--blue-ink);}.chips{display:flex;flex-wrap:wrap;gap:8px;}.chip{padding:6px 12px;border-radius:10px;background:var(--surface-sunk);border:1px solid var(--border-subtle);font:500 13px var(--font-display);}@media(max-width:780px){.layer{grid-template-columns:1fr;}}</style>
+</head>
+<body>
+<header class="mast">
+  <a href="../index.html" style="display:flex;align-items:center;gap:12px;"><img src="../assets/media/wip/image25.png" alt="Google Cloud"><span class="mast-rule"></span><span class="mast-tag">09 · Architecture</span></a>
+  <span class="mast-sp"></span>
+  <div class="mast-nav"><a class="btn-ghost" href="../index.html">← Briefing Map</a><a class="btn-ghost" href="build_01_how.html">← 08 How Built</a><button class="btn-ghost" id="themeToggle" type="button">Dark</button><a class="btn-cta" href="build_03_models.html">10 Model Choice →</a></div>
+</header>
+<main class="page-wrap">
+  <div class="page-kick"><i></i>From Personas to Production</div>
+  <h1 class="page-h1">Non-Invasive Overlay Architecture</h1>
+  <p class="page-lede">Agents sit <b>above existing systems of record</b>—never ripping and replacing SAP, Manhattan WMS, or Oracle TMS. Grounding runs in BigQuery &amp; Vertex AI Search; actions execute via governed APIs.</p>
+
+  <div class="arch-layers">
+    <div class="layer"><div class="layer-lbl">1 · Engagement Surfaces</div><div class="chips"><span class="chip">Gemini Enterprise Web</span><span class="chip">Google Workspace (Sheets / Docs / Chat)</span><span class="chip">Vernacular Mobile &amp; WhatsApp</span><span class="chip">Supply Chain Control Tower</span></div></div>
+    <div class="layer"><div class="layer-lbl">2 · Agent Orchestration</div><div class="chips"><span class="chip">Gemini Enterprise Agent Studio</span><span class="chip">Vertex AI Agent Engine</span><span class="chip">A2A (Agent-to-Agent) Protocol</span><span class="chip">Human-in-the-Loop Approval Gates</span></div></div>
+    <div class="layer"><div class="layer-lbl">3 · Intelligence &amp; Grounding</div><div class="chips"><span class="chip">Gemini 2.5 Pro / Flash</span><span class="chip">BigQuery Supply Chain Cortex</span><span class="chip">Vertex AI Search (PDFs, SOPs, Contracts)</span><span class="chip">Google Maps Platform &amp; Weather API</span></div></div>
+    <div class="layer"><div class="layer-lbl">4 · Systems of Record</div><div class="chips"><span class="chip">SAP S/4HANA / IBP / Ariba</span><span class="chip">WMS &amp; MES / SCADA</span><span class="chip">TMS &amp; Carrier EDI (855/856/214)</span><span class="chip">POS, Cold-Chain IoT &amp; RFID</span></div></div>
+  </div>
+
+  <footer class="deck-footer"><span>09 · Enterprise Reference Architecture</span><span class="footer-brand"><img src="../assets/media/wip/image25.png" alt="Google Cloud"><span style="width:1px;height:16px;background:#DADCE0;"></span><img src="../assets/media/gemini_enterprise_logo.svg" alt="Gemini Enterprise"></span></footer>
+</main>
+<script>initDeckChrome({ root: '../', prev: 'build_01_how.html', next: 'build_03_models.html' });</script>
+</body></html>

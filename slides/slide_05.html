@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en" class="theme-light">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>05 · Live Demo: TM&amp;D &amp; CPG Cockpit</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;600;700&family=Google+Sans+Text:wght@400;500;700&family=Roboto+Mono:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="../assets/aurora.css"><link rel="stylesheet" href="../assets/deck_nav.css?v=2">
+<script src="../assets/deck_nav.js?v=15"></script>
+<style>.tabs{display:flex;flex-wrap:wrap;gap:8px;margin:20px 0 16px;}.tab{font:600 13px var(--font-display);padding:8px 16px;border-radius:999px;border:1px solid var(--border-subtle);background:var(--surface);color:var(--text);cursor:pointer;}.tab.active{background:var(--g-blue);color:#FFF;border-color:var(--g-blue);}</style>
+</head>
+<body>
+<header class="mast">
+  <a href="../index.html" style="display:flex;align-items:center;gap:12px;"><img src="../assets/media/wip/image25.png" alt="Google Cloud"><span class="mast-rule"></span><span class="mast-tag">05 · Live Demo Cockpit</span></a>
+  <span class="mast-sp"></span>
+  <div class="mast-nav" id="mastSlideNav"><button class="btn-ghost" id="themeToggle" type="button">Dark</button></div>
+</header>
+<main class="page-wrap">
+  <div class="page-kick"><i></i>Stage 05 · Interactive TM&amp;D &amp; CPG Distribution War-Room</div>
+  <h1 class="page-h1">Live Demo: A Day in TM&amp;D with Gemini Enterprise</h1>
+  <p class="page-lede">Select a live scenario to watch how Gemini Enterprise agents execute across <b>Morning ASM Pulse</b>, <b>Midday DSR Voice &amp; Vision</b>, and <b>Evening CFA/Fleet Reconciliation</b>.</p>
+
+  <div class="tabs">
+    <button class="tab active" onclick="runCase('asm', this)">08:15 AM · ASM Morning Pulse</button>
+    <button class="tab" onclick="runCase('dsr', this)">11:30 AM · DSR Voice &amp; Planogram</button>
+    <button class="tab" onclick="runCase('cfa', this)">04:30 PM · CFA Fair-Share &amp; MT Slot</button>
+  </div>
+
+  <div class="card card-top-accent p-blue" style="padding:24px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+      <span class="badge-pill badge-solid" id="caseBadge">▶ LIVE SCENARIO</span>
+      <a href="../pillars/05_distribution.html" style="font:600 13px var(--font-display);color:var(--blue-ink);">Open Full CPG Distribution Pillar →</a>
+    </div>
+    <div id="caseSteps" style="display:grid;gap:12px;"></div>
+  </div>
+
+  <footer class="deck-footer"><span>Slide 05 · Live Demo Cockpit</span><span class="footer-brand"><img src="../assets/media/wip/image25.png" alt="Google Cloud"><span style="width:1px;height:16px;background:#DADCE0;"></span><img src="../assets/media/gemini_enterprise_logo.svg" alt="Gemini Enterprise"></span></footer>
+</main>
+<script>
+  initDeckChrome({ root: '../' });
+  var CASES = {
+    asm: {
+      badge: '08:15 AM · AREA SALES MANAGER (LUCKNOW)',
+      steps: [
+        ['Territory Morning Pulse Gem', 'BigQuery DMS Sync', 'Scanned 18 Wholesale Dealers: flagged Staple Atta 5kg stock-out at 3 WDs and -14% MTD gap on Rural Beat 4.'],
+        ['Beat Capacity Balancer', 'Attendance + Beat Sheet', 'Detected 1 TSR on leave; reassigned 2 A-class wholesale counters to adjacent executive.'],
+        ['Gate-Meeting Action Card', 'Google Chat + WhatsApp', 'Pushed 3 vernacular focus-SKU priorities to 16 DSRs before 08:45 AM market departure.']
+      ]
+    },
+    dsr: {
+      badge: '11:30 AM · BEAT SALES REP & TRADE MARKETING',
+      steps: [
+        ['Vernacular Voice Beat Copilot', 'Hindi Voice + Outlet CRM', 'Guided DSR at Gupta General Store: "Pitch Premium Biscuits ₹50 trade scheme; collect ₹4,200 overdue."'],
+        ['Vision-AI Planogram Auditor (Multimodal)', 'Kirana Shelf Photo', 'Verified 62% Enterprise Share-of-Shelf on Classmate/Bingo rack; auto-approved ₹1,200 monthly display payout.'],
+        ['Hands-Free Voice Order Logger (OpenAPI)', 'DMS Order API', 'Converted spoken Hindi order ("5 box Gold Flake, 2 carton Dark Fantasy") into draft DMS order in 4 seconds.']
+      ]
+    },
+    cfa: {
+      badge: '04:30 PM · CS&L & FLEET DISPATCH',
+      steps: [
+        ['Fair-Share Allocation Agent', 'CFA ATP + WD Velocity', 'Allocated constrained biscuit stock equitably across 38 WDs while protecting 100% of Blinkit/DMart POs.'],
+        ['MT/Q-Comm Slot Rescheduler', 'Retailer EDI + Maps API', 'Detected NH-48 jam; secured revised 4:30 PM dark-store dock slot, avoiding ₹3.8L OTIF penalty.'],
+        ['POD OCR & Freight Audit (Multimodal)', 'Scanned PODs + FASTag', 'Audited 42 carrier detention claims against GPS geofences, recovering ₹1.9L in invalid surcharges.']
+      ]
+    }
+  };
+  window.runCase = function (k, btn) {
+    document.querySelectorAll('.tab').forEach(function (t) { t.classList.remove('active'); });
+    if (btn) btn.classList.add('active');
+    var c = CASES[k];
+    document.getElementById('caseBadge').textContent = '▶ ' + c.badge;
+    document.getElementById('caseSteps').innerHTML = c.steps.map(function (s, i) {
+      return '<div style="padding:14px 16px;border-radius:12px;background:var(--surface-sunk);border:1px solid var(--border-subtle);">' +
+        '<div style="display:flex;justify-content:space-between;font:600 12px var(--font-mono);color:var(--blue-ink);margin-bottom:4px;"><span>STEP ' + (i + 1) + ' · ⚡ ' + s[0] + '</span><span style="color:var(--text-muted);">' + s[1] + '</span></div>' +
+        '<div style="font-size:14px;line-height:1.5;">' + s[2] + '</div>' +
+      '</div>';
+    }).join('');
+  };
+  runCase('asm');
+</script>
+</body></html>

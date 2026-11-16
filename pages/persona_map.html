@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en" class="theme-light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>07 · Persona Map: The Agentic Supply Chain Workforce</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;600;700&family=Google+Sans+Text:wght@400;500;700&family=Roboto+Mono:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="../assets/aurora.css">
+<link rel="stylesheet" href="../assets/deck_nav.css?v=2">
+<script src="../assets/deck_nav.js?v=15"></script>
+<script src="../data/supply_chain_data.js?v=14"></script>
+<script src="../data/live_agents_registry.js?v=1"></script>
+<style>
+  :root {
+    --base-bg: #EDF0F6;
+    --base-bg-2: #DFE4EE;
+    --hatch: rgba(90, 98, 117, 0.17);
+  }
+  html.theme-dark {
+    --base-bg: #23262E;
+    --base-bg-2: #2D313B;
+    --hatch: rgba(168, 175, 192, 0.15);
+  }
+
+  .estate-strip {
+    display: grid; grid-template-columns: repeat(4, minmax(0, 1fr));
+    background: var(--surface); border: 1px solid var(--border-subtle);
+    border-radius: 16px; overflow: hidden; margin: 18px 0 14px; box-shadow: var(--shadow-sm);
+  }
+  .estate-strip div { padding: 14px 18px; border-left: 1px solid var(--border-subtle); }
+  .estate-strip div:first-child { border-left: 0; }
+  .estate-strip b { display: block; font: 600 24px/1.1 var(--font-mono); color: var(--text); }
+  .estate-strip span { display: block; margin-top: 4px; font-size: 12px; color: var(--text-muted); }
+
+  .legend-bar {
+    display: flex; flex-wrap: wrap; align-items: center; gap: 16px;
+    padding: 10px 16px; border-radius: 12px; background: var(--surface);
+    border: 1px solid var(--border-subtle); font-size: 12px; color: var(--text-muted); margin-bottom: 12px;
+  }
+  .lg-item { display: inline-flex; align-items: center; gap: 7px; }
+  .sw { width: 20px; height: 15px; border-radius: 4px; display: inline-block; }
+  .sw-agent { background: var(--surface); border: 1px solid rgba(49,134,255,.38); border-left: 4px solid var(--g-blue); }
+  .sw-first { background: repeating-linear-gradient(45deg, rgba(252,65,61,0) 0 3px, rgba(252,65,61,.40) 3px 5px), var(--surface); border: 1px solid rgba(49,134,255,.38); border-left: 4px solid var(--g-red); }
+  .sw-next  { background: repeating-linear-gradient(45deg, rgba(254,199,0,0) 0 3px, rgba(254,199,0,.40) 3px 5px), var(--surface); border: 1px solid rgba(49,134,255,.38); border-left: 4px solid var(--g-yellow); }
+  .sw-sys   { background: repeating-linear-gradient(135deg, transparent 0 3px, var(--hatch) 3px 4px), var(--surface-sunk); border: 1px solid var(--border-strong); }
+  .sw-human { background: transparent; border: 1.5px dashed var(--text-dim); }
+
+  .controls { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 10px 0; }
+  .filter-pill, .prio-pill {
+    font: 500 12px var(--font-display); padding: 6px 12px; border-radius: 999px;
+    border: 1px solid var(--border-subtle); background: var(--surface); color: var(--text);
+    cursor: pointer; transition: all .15s;
+  }
+  .filter-pill:hover, .prio-pill:hover { border-color: var(--g-blue); }
+  .filter-pill.active { background: var(--g-blue); color: #FFF; border-color: var(--g-blue); font-weight: 600; }
+  .prio-pill.active { background: var(--surface-sunk); border-color: var(--g-blue); color: var(--blue-ink); font-weight: 600; }
+  .search-box {
+    margin-left: auto; min-width: 240px; padding: 7px 14px; border-radius: 999px;
+    border: 1px solid var(--border-subtle); background: var(--surface); color: var(--text);
+    font: 400 13px var(--font-body); outline: none;
+  }
+
+  /* Two-column Stage: Board on Left + Sticky Inspector Drawer on Right */
+  .stage-grid {
+    display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: 18px; align-items: start;
+  }
+  .board { display: flex; flex-direction: column; gap: 8px; }
+  .b-row {
+    display: grid; grid-template-columns: 310px 1fr; gap: 12px; align-items: center;
+    background: var(--surface); border: 1px solid var(--border-subtle);
+    border-radius: 12px; padding: 10px 14px; transition: border-color .15s, box-shadow .15s;
+  }
+  .b-row:hover { border-color: var(--tc); box-shadow: var(--shadow-sm); }
+  .b-persona {
+    display: flex; align-items: center; gap: 10px;
+    border-right: 1px solid var(--border-subtle); padding-right: 12px; cursor: pointer;
+  }
+  .b-av {
+    width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0;
+    display: inline-flex; align-items: center; justify-content: center;
+    font: 700 12px var(--font-mono); color: #FFF; background: var(--tc);
+  }
+  .b-meta { font: 600 10px var(--font-mono); color: var(--ti); text-transform: uppercase; letter-spacing: .5px; }
+  .b-name { font: 600 14px/1.25 var(--font-display); margin: 2px 0; color: var(--text); }
+  .b-impact { font: 500 11px var(--font-body); color: var(--text-muted); }
+
+  /* 54x40 Exact Reference Chessboard Cells */
+  .b-tiles { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+  .bcell { cursor: pointer; display: inline-flex; }
+  .bcell i {
+    font-style: normal;
+    width: 54px; height: 40px; border-radius: 6px;
+    display: inline-flex; align-items: center; justify-content: center;
+    font: 600 10px var(--font-mono); letter-spacing: .01em;
+    color: var(--text-muted);
+    transition: transform .1s, filter .1s, box-shadow .1s;
+  }
+  .bcell:hover i { transform: translateY(-2px); filter: brightness(0.97); }
+  .bcell.own-agentic i {
+    background: var(--surface);
+    border: 1px solid rgba(49, 134, 255, .38);
+    border-left: 4px solid var(--g-blue);
+  }
+  .bcell.prio-first i {
+    background: repeating-linear-gradient(45deg, rgba(252,65,61,0) 0 4px, rgba(252,65,61,.40) 4px 6px), var(--surface);
+    border: 1px solid rgba(49, 134, 255, .38);
+    border-left: 4px solid var(--g-red);
+  }
+  .bcell.prio-next i {
+    background: repeating-linear-gradient(45deg, rgba(254,199,0,0) 0 4px, rgba(254,199,0,.40) 4px 6px), var(--surface);
+    border: 1px solid rgba(49, 134, 255, .38);
+    border-left: 4px solid var(--g-yellow);
+  }
+  .bcell.own-system i {
+    background: repeating-linear-gradient(135deg, transparent 0 3px, var(--hatch) 3px 4px), var(--surface-sunk);
+    border: 1px solid var(--border-strong);
+  }
+  .bcell.own-human i {
+    background: transparent;
+    border: 1.5px dashed var(--text-dim);
+  }
+  .plive {
+    flex: none; display: inline-flex; align-items: center; gap: 5px;
+    font: 700 9.5px/1 var(--font-mono); letter-spacing: .06em; text-transform: uppercase;
+    color: #FFF; background: var(--g-green); border-radius: 999px; padding: 4px 8px;
+    box-shadow: 0 0 0 3px rgba(0, 175, 87, .16); cursor: pointer; text-decoration: none;
+    margin-left: auto;
+  }
+  .plive::before {
+    content: ""; width: 6px; height: 6px; border-radius: 50%; background: #FFF;
+    animation: livePulse 1.6s ease-in-out infinite;
+  }
+  @keyframes livePulse { 0%,100% { box-shadow: 0 0 0 0 rgba(255,255,255,.9); } 50% { box-shadow: 0 0 0 4px rgba(255,255,255,0); } }
+    border: 1.5px dashed var(--text-dim);
+  }
+  .bcell.is-open i {
+    border: 2px solid var(--g-blue);
+    box-shadow: 0 0 0 2px rgba(49, 134, 255, .28);
+  }
+  .bcell.dimmed { opacity: .22; }
+
+  .row-agent-tag {
+    margin-left: auto; font: 600 11px var(--font-display); color: var(--ti);
+    padding: 4px 10px; border-radius: 999px;
+    background: color-mix(in srgb, var(--tc) 10%, var(--surface));
+    border: 1px solid color-mix(in srgb, var(--tc) 30%, transparent);
+    cursor: pointer; white-space: nowrap;
+  }
+
+  /* Sticky Right-Hand Inspector Drawer (exact Oil & Gas reference styling) */
+  .inspector {
+    position: sticky; top: 76px;
+    background: var(--surface); border: 1px solid var(--border-subtle);
+    border-radius: 14px; padding: 0; box-shadow: var(--shadow-md);
+    max-height: calc(100vh - 100px); overflow-y: auto;
+  }
+  .d-head {
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 16px 18px; border-bottom: 1px solid var(--border-subtle);
+    background: var(--surface-sunk);
+  }
+  .d-code {
+    font: 700 11px var(--font-mono); padding: 5px 8px; border-radius: 6px;
+    background: var(--surface); border: 1px solid var(--border-strong);
+    color: var(--text-muted); flex: none;
+  }
+  .d-title { flex: 1; min-width: 0; }
+  .d-action { display: block; font: 600 15.5px/1.35 var(--font-display); color: var(--text); }
+  .d-who { display: block; font: 400 12px var(--font-body); color: var(--text-muted); margin-top: 3px; }
+  .d-close {
+    flex: none; border: 1px solid var(--border-strong); background: var(--surface);
+    color: var(--text-muted); border-radius: 8px; width: 28px; height: 28px;
+    cursor: pointer; font-size: 13px; line-height: 1;
+  }
+  .d-tags { display: flex; flex-wrap: wrap; gap: 6px; padding: 12px 18px 0; }
+  .d-tag {
+    font: 600 10px var(--font-mono); letter-spacing: .05em; text-transform: uppercase;
+    padding: 4px 9px; border-radius: 999px; border: 1px solid var(--border-strong);
+    color: var(--text-muted); background: var(--surface-sunk);
+  }
+  .d-tag.prio-first { color: var(--red-ink); border-color: rgba(252,65,61,.45); background: rgba(252,65,61,.12); }
+  .d-tag.prio-next  { color: #B06000; border-color: rgba(254,199,0,.55); background: rgba(254,199,0,.18); }
+  .d-tag.own-agentic { color: var(--blue-ink); border-color: rgba(49,134,255,.45); background: rgba(49,134,255,.10); }
+  .d-tag.agent { color: var(--green-ink); border-color: rgba(0,175,87,.45); background: rgba(0,175,87,.10); }
+  .d-body { padding: 16px 20px 18px; display: grid; gap: 14px; }
+  .d-block { border-left: 3px solid var(--border-strong); padding-left: 14px; }
+  .d-block.today { border-left-color: var(--border-strong); }
+  .d-block.vuln  { border-left-color: var(--g-red); }
+  .d-block.plug  { border-left-color: var(--g-green); }
+  .d-k { font: 600 10px var(--font-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 5px; }
+  .d-v { font: 400 13px/1.55 var(--font-body); color: var(--text); }
+  .d-v.muted { color: var(--text-muted); }
+  .d-agent { font: 600 13.5px/1.35 var(--font-body); color: var(--green-ink); margin-bottom: 3px; }
+  .d-regid { font: 500 10.5px var(--font-mono); color: var(--text-muted); margin-bottom: 6px; }
+  .d-spec {
+    margin-top: 2px;
+    padding-top: 10px;
+    border-top: 1px solid var(--border-subtle);
+    display: grid; gap: 5px;
+  }
+  .d-spec-row { display: flex; gap: 10px; align-items: baseline; font-size: 12px; }
+  .d-spec-k { font: 600 10px var(--font-mono); letter-spacing: .08em; color: var(--text-muted); text-transform: uppercase; flex: none; width: 82px; }
+  .d-spec-v { font: 400 12px var(--font-body); color: var(--text-muted); }
+  .d-foot {
+    display: flex; flex-wrap: wrap; gap: 10px; align-items: center;
+    padding: 0 20px 20px;
+  }
+  .ge-launch {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 9px 15px; border-radius: 999px;
+    background: #202124; color: #FFFFFF;
+    border: 1px solid #202124; text-decoration: none;
+    font: 600 12.5px/1 var(--font-body);
+    transition: background .14s ease, transform .14s ease;
+  }
+  .ge-launch:hover { background: #303134; transform: translateY(-1px); }
+  .ge-mark { height: 15px; width: auto; display: block; filter: brightness(0) invert(1); }
+  .ge-arrow { opacity: .8; font-size: 12px; }
+
+  @media (max-width: 1120px) {
+    .stage-grid { grid-template-columns: 1fr; }
+    .inspector { position: static; max-height: none; }
+  }
+  @media (max-width: 780px) {
+    .estate-strip { grid-template-columns: repeat(2, 1fr); }
+    .b-row { grid-template-columns: 1fr; }
+    .b-persona { border-right: 0; border-bottom: 1px solid var(--border-subtle); padding-bottom: 8px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="mast">
+  <a href="../index.html" style="display:flex;align-items:center;gap:12px;">
+    <img src="../assets/media/wip/image25.png" alt="Google Cloud">
+    <span class="mast-rule"></span>
+    <span class="mast-tag">07 · Persona Map</span>
+  </a>
+  <span class="mast-sp"></span>
+  <div class="mast-nav" id="mastSlideNav">
+    <button class="btn-ghost" id="themeToggle" type="button">Dark</button>
+  </div>
+</header>
+
+<main class="page-wrap">
+  <div class="page-kick"><i></i>Slide 07 · The Agentic Supply Chain Workforce</div>
+  <h1 class="page-h1">Persona Map: Supply Chain Roles &amp; Agentic Workforce</h1>
+  <p class="page-lede">Each row is one supply chain persona on the left and its dedicated Gemini Enterprise agents on the right. <b>Hover or click any square</b> to inspect the agent in the right-hand panel.</p>
+
+  <div class="estate-strip">
+    <div><b>60</b><span>Supply chain personas</span></div>
+    <div><b>300</b><span>Dedicated AI agents</span></div>
+    <div><b>6</b><span>Supply chain pillars</span></div>
+    <div><b>100%</b><span>Non-invasive over ERP / DMS / WMS</span></div>
+  </div>
+
+  <div class="legend-bar">
+    <span class="lg-item"><span class="sw sw-first"></span> Build First (Critical)</span>
+    <span class="lg-item"><span class="sw sw-next"></span> Build Next (Friction)</span>
+    <span class="lg-item"><span class="sw sw-agent"></span> Routine Agentic</span>
+    <span class="lg-item"><span class="plive" style="margin-left:0;cursor:default;">Live</span> Live in Gemini Enterprise</span>
+  </div>
+
+  <div class="controls">
+    <button class="filter-pill active" data-filter="all">All 60 Roles</button>
+    <button class="filter-pill" data-filter="planning">01 Planning (12)</button>
+    <button class="filter-pill" data-filter="procurement">02 Procurement (9)</button>
+    <button class="filter-pill" data-filter="manufacturing">03 Manufacturing (9)</button>
+    <button class="filter-pill" data-filter="warehousing">04 Warehousing (9)</button>
+    <button class="filter-pill" data-filter="distribution">05 Distribution (12)</button>
+    <button class="filter-pill" data-filter="reverse">06 Reverse (9)</button>
+    <input class="search-box" id="searchBox" type="search" placeholder="Search persona, agent, or KPI...">
+  </div>
+
+  <div class="controls" style="margin-top:4px;">
+    <span style="font:600 11px var(--font-mono);color:var(--text-muted);text-transform:uppercase;">Build queue:</span>
+    <button class="prio-pill active" data-prio="all">All Agents</button>
+    <button class="prio-pill" data-prio="prio-first">Build First (Red)</button>
+    <button class="prio-pill" data-prio="prio-next">Build Next (Yellow)</button>
+    <button class="prio-pill" data-prio="prio-routine">Routine Agentic (Blue)</button>
+    <button class="prio-pill" data-prio="is-live">● Live in GE (37 Roles)</button>
+  </div>
+
+  <div id="resultCount" style="font:500 12px var(--font-mono);color:var(--text-muted);margin-bottom:10px;">Showing 60 personas</div>
+
+  <div class="stage-grid">
+    <div class="board" id="boardGrid"></div>
+    <aside class="inspector" id="inspectorPanel" aria-live="polite"></aside>
+  </div>
+
+  <footer class="deck-footer">
+    <span>Slide 07 · Persona Map: The Agentic Supply Chain Workforce</span>
+    <span class="footer-brand">
+      <img src="../assets/media/wip/image25.png" alt="Google Cloud">
+      <span style="width:1px;height:16px;background:#DADCE0;"></span>
+      <img src="../assets/media/gemini_enterprise_logo.svg" alt="Gemini Enterprise">
+    </span>
+  </footer>
+</main>
+
+<script>
+  initDeckChrome({ root: '../' });
+
+  var allRows = [];
+  if (window.SUPPLY_CHAIN_DATA && window.SUPPLY_CHAIN_DATA.pillars) {
+    window.SUPPLY_CHAIN_DATA.pillars.forEach(function (p) {
+      p.subprocesses.forEach(function (sub) {
+        sub.items.forEach(function (item) {
+          allRows.push(Object.assign({}, item, {
+            rowNum: allRows.length + 1,
+            pillarId: p.id, pillarTitle: p.title, pillarNum: p.num,
+            cssClass: p.cssClass, subprocess: sub.name
+          }));
+        });
+      });
+    });
+  }
+
+  var params = new URLSearchParams(window.location.search);
+  var activeFilter = params.get('pillar') || 'all';
+  var activePrio = 'all';
+  var searchQuery = '';
+  var pinned = false;
+
+  function initials(name) {
+    return name.split(/[\s\/]+/).filter(Boolean).slice(0, 2).map(function (w) { return w[0].toUpperCase(); }).join('');
+  }
+
+  function buildCells(r) {
+    var isFirst = (r.buildMode && r.buildMode.indexOf('Low-Code') !== -1);
+    var prioCls = isFirst ? 'own-agentic prio-first' : 'own-agentic prio-next';
+    var prioLbl = isFirst ? 'Agent Prepares (Build First)' : 'Agent Prepares (Build Next)';
+    var qLbl = isFirst ? 'Build First (Critical)' : 'Build Next (Friction)';
+    var rowTag = 'A' + (r.rowNum < 10 ? '0' + r.rowNum : r.rowNum);
+    var liveMap = window.SC_LIVE_AGENT_MAP || {};
+    if (r.tmAndDAgents && r.tmAndDAgents.length) {
+      return r.tmAndDAgents.map(function (ag, idx) {
+        var isLive = Boolean(liveMap[(ag.name || '').toLowerCase()]);
+        var c = 'own-agentic ' + (ag.prio ? ag.prio : 'prio-routine') + (isLive ? ' is-live' : '');
+        var lbl = ag.prio === 'prio-first' ? 'Agent Prepares (Build First)' : (ag.prio === 'prio-next' ? 'Agent Prepares (Build Next)' : 'Routine Agentic');
+        var q = ag.prio === 'prio-first' ? 'Build First (Critical)' : (ag.prio === 'prio-next' ? 'Build Next (Friction)' : 'Routine Agentic');
+        var wNum = idx + 1;
+        var cellCode = rowTag + 'W' + (wNum < 10 ? '0' + wNum : wNum);
+        return {
+          code: cellCode, cls: c, owner: lbl, queue: q, isLive: isLive,
+          title: ag.name, today: ag.dailyTask || r.mandate, desc: ag.desc || ag.dailyTask,
+          impact: ag.impact || r.impact, sources: ag.sources || r.sources, prompt: ag.promptHint || r.promptHint
+        };
+      });
+    }
+    var isPrimaryLive = Boolean(liveMap[(r.agent || '').toLowerCase()]);
+    return [
+      { code: rowTag + 'W01', cls: prioCls + (isPrimaryLive ? ' is-live' : ''), owner: prioLbl, queue: qLbl, isLive: isPrimaryLive, title: r.agent, today: r.mandate, desc: r.promptHint, impact: r.impact, sources: r.sources, prompt: r.promptHint }
+    ];
+  }
+
+  function syncButtons() {
+    document.querySelectorAll('.filter-pill').forEach(function (b) {
+      b.classList.toggle('active', b.dataset.filter === activeFilter);
+    });
+    document.querySelectorAll('.prio-pill').forEach(function (b) {
+      b.classList.toggle('active', b.dataset.prio === activePrio);
+    });
+  }
+
+  function showInspector(r, cell, isPin) {
+    var panel = document.getElementById('inspectorPanel');
+    panel.className = 'inspector ' + r.cssClass;
+    var srcs = (cell && cell.sources) ? cell.sources : r.sources;
+    var prmt = (cell && cell.prompt) ? cell.prompt : r.promptHint;
+    var imp  = (cell && cell.impact) ? cell.impact : r.impact;
+    var cCode = cell ? cell.code : ('A' + (r.rowNum < 10 ? '0' + r.rowNum : r.rowNum) + 'W01');
+    var cTitle = cell ? cell.title : r.agent;
+    var todayText = (cell && cell.today) ? cell.today : r.mandate;
+    var vulnText = (cell && cell.today && cell.today !== r.mandate)
+      ? r.mandate
+      : 'Manual reconciliation across disconnected systems introduces latency, blind spots, and reactive firefighting.';
+    var agentDesc = (cell && cell.desc) ? cell.desc : prmt;
+    var liveMap = window.SC_LIVE_AGENT_MAP || {};
+    var liveRec = liveMap[(cTitle || '').toLowerCase()] || null;
+    var geHref = (liveRec && liveRec.geUrl) ? liveRec.geUrl : '';
+    var geLabel = (liveRec && liveRec.isItcTmd) ? 'Open ' + liveRec.geDisplayName : (liveRec ? 'Open live agent' : '');
+
+    panel.innerHTML =
+      '<div class="d-head">' +
+        '<div class="d-title">' +
+          '<span class="d-action">' + cTitle + '</span>' +
+          '<a class="d-who" href="persona_dossier.html?id=' + encodeURIComponent(r.id) + '" style="color:inherit;text-decoration:none;display:inline-block;" title="Open Persona Dossier">' + r.persona + ' · ' + r.pillarTitle + ' &rarr;</a>' +
+        '</div>' +
+        (isPin ? '<button class="d-close" id="unpinBtn" title="Close">✕</button>' : '') +
+      '</div>' +
+      '<div class="d-body">' +
+        '<div class="d-block today"><div class="d-k">How it runs today</div><div class="d-v muted">' + todayText + '</div></div>' +
+        '<div class="d-block vuln"><div class="d-k">What goes wrong</div><div class="d-v">' + vulnText + '</div></div>' +
+        '<div class="d-block plug">' +
+          '<div class="d-k">What the agent does</div>' +
+          '<div class="d-agent">' + cTitle + '</div>' +
+          '<div class="d-regid">' + cCode + ' · agent registry id</div>' +
+          '<div class="d-v muted">' + agentDesc + '</div>' +
+        '</div>' +
+        '<div class="d-block"><div class="d-k">Value impact</div><div class="d-v"><b>' + imp + '</b></div></div>' +
+        '<div class="d-block"><div class="d-k">System of record</div><div class="d-v muted">' + srcs.join(' · ') + '</div></div>' +
+        '<div class="d-spec">' +
+          '<div class="d-spec-row"><span class="d-spec-k">Build Queue</span><span class="d-spec-v">' + (cell && cell.queue ? cell.queue : 'Build First (Critical)') + '</span></div>' +
+          '<div class="d-spec-row"><span class="d-spec-k">Sub-Process</span><span class="d-spec-v">' + r.subprocess + '</span></div>' +
+          '<div class="d-spec-row"><span class="d-spec-k">GE Status</span><span class="d-spec-v">' + (liveRec ? '<b style="color:var(--green-ink);">● Live in Gemini Enterprise</b>' + (liveRec.isItcTmd ? ' (ITC TMD)' : '') : 'Staged Blueprint') + '</span></div>' +
+          '<div class="d-spec-row"><span class="d-spec-k">Status</span><span class="d-spec-v">' + (isPin ? 'Pinned (click ✕ or another square)' : 'Hovering (click square to pin)') + '</span></div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="d-foot">' +
+        '<a class="ge-launch" style="background:var(--g-blue);border-color:var(--g-blue);margin-bottom:8px;" href="agent_details.html?agent=' + encodeURIComponent(cTitle) + '&persona=' + encodeURIComponent(r.id) + '">' +
+          '<span>View Agent Details</span>' +
+          '<span class="ge-arrow" aria-hidden="true">&rarr;</span>' +
+        '</a>' +
+        (liveRec ? (
+          '<a class="ge-launch" href="' + geHref + '" target="_blank" rel="noopener noreferrer" title="Opens Gemini Enterprise">' +
+            '<img class="ge-mark" src="../assets/media/gemini_enterprise_logo.svg" alt="Gemini Enterprise">' +
+            '<span class="ge-cta">' + geLabel + '</span>' +
+            '<span class="ge-arrow" aria-hidden="true">&#8599;</span>' +
+          '</a>' +
+          '<a href="demo_stage.html?agent=' + encodeURIComponent(liveRec.id) + '" style="display:block;width:100%;text-align:center;margin-top:6px;font:600 12px var(--font-display);color:var(--blue-ink);text-decoration:none;">&#9654; Watch Video &amp; Live Demo Stage &rarr;</a>'
+        ) : '<span style="display:block;font:500 11.5px var(--font-mono);color:var(--text-muted);">Blueprint · Not yet deployed in Gemini Enterprise</span>') +
+      '</div>';
+
+    var ub = document.getElementById('unpinBtn');
+    if (ub) {
+      ub.addEventListener('click', function () {
+        pinned = false;
+        showInspector(r, cell, false);
+      });
+    }
+  }
+
+  function render() {
+    var q = searchQuery.trim().toLowerCase();
+    var filtered = allRows.filter(function (r) {
+      if (activeFilter !== 'all' && r.pillarId !== activeFilter) return false;
+      if (!q) return true;
+      var agTxt = (r.tmAndDAgents || []).map(function (a) { return a.name + ' ' + a.desc; }).join(' ');
+      return (r.persona + ' ' + r.agent + ' ' + r.mandate + ' ' + r.impact + ' ' + r.subprocess + ' ' + agTxt).toLowerCase().indexOf(q) !== -1;
+    });
+    var totalCells = filtered.reduce(function (acc, r) { return acc + buildCells(r).length; }, 0);
+    document.getElementById('resultCount').textContent = 'Showing ' + filtered.length + ' of ' + allRows.length + ' supply chain personas (' + totalCells + ' cells)';
+    var grid = document.getElementById('boardGrid');
+    grid.innerHTML = '';
+
+    filtered.forEach(function (r, rIdx) {
+      var row = document.createElement('div');
+      row.className = 'b-row ' + r.cssClass;
+      var cells = buildCells(r);
+
+      var tilesWrap = document.createElement('div');
+      tilesWrap.className = 'b-tiles';
+
+      cells.forEach(function (c, cIdx) {
+        var sp = document.createElement('span');
+        var isMatch = activePrio === 'all' || c.cls.indexOf(activePrio) !== -1;
+        sp.className = 'bcell ' + c.cls + (isMatch ? '' : ' dimmed') + (rIdx === 0 && cIdx === 0 ? ' is-open' : '');
+        sp.title = c.code + ' · ' + c.title;
+        sp.innerHTML = '<i>' + c.code + '</i>';
+        sp.addEventListener('mouseenter', function () {
+          if (!pinned) showInspector(r, c, false);
+        });
+        sp.addEventListener('click', function (e) {
+          e.stopPropagation();
+          pinned = true;
+          document.querySelectorAll('.bcell.is-open').forEach(function (x) { x.classList.remove('is-open'); });
+          sp.classList.add('is-open');
+          showInspector(r, c, true);
+        });
+        tilesWrap.appendChild(sp);
+      });
+
+      var pCol = document.createElement('div');
+      pCol.className = 'b-persona';
+      var liveCell = cells.find(function (c) { return c.isLive; });
+      var rowLiveRec = liveCell ? ((window.SC_LIVE_AGENT_MAP || {})[(liveCell.title || '').toLowerCase()] || (window.SC_LIVE_AGENT_MAP || {})[(r.agent || '').toLowerCase()]) : null;
+      pCol.innerHTML =
+        '<span class="b-av">' + initials(r.persona) + '</span>' +
+        '<div style="min-width:0;flex:1;">' +
+          '<div class="b-meta">' + r.id + ' · ' + r.pillarTitle + '</div>' +
+          '<div class="b-name">' + r.persona + '</div>' +
+          '<div class="b-impact">' + r.subprocess + ' · <b>' + r.impact + '</b></div>' +
+        '</div>' +
+        (rowLiveRec ? '<a class="plive" href="' + rowLiveRec.geUrl + '" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation();" title="Open ' + (rowLiveRec.geDisplayName || rowLiveRec.name) + ' in Gemini Enterprise">Live</a>' : '');
+      pCol.title = 'Open Persona Dossier & Agent Suite';
+      pCol.addEventListener('click', function () { window.location.href = 'persona_dossier.html?id=' + encodeURIComponent(r.id); });
+
+      row.appendChild(pCol);
+      row.appendChild(tilesWrap);
+      grid.appendChild(row);
+    });
+
+    if (filtered.length) {
+      showInspector(filtered[0], buildCells(filtered[0])[0], false);
+    }
+  }
+
+  document.querySelectorAll('.filter-pill').forEach(function (b) {
+    b.addEventListener('click', function () { pinned = false; activeFilter = b.dataset.filter; syncButtons(); render(); });
+  });
+  document.querySelectorAll('.prio-pill').forEach(function (b) {
+    b.addEventListener('click', function () { activePrio = b.dataset.prio; syncButtons(); render(); });
+  });
+  document.getElementById('searchBox').addEventListener('input', function (e) { pinned = false; searchQuery = e.target.value; render(); });
+
+  syncButtons();
+  render();
+</script>
+</body>
+</html>

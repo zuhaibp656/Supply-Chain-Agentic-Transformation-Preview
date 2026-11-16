@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en" class="theme-light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Agentic Transformation for Modern Supply Chains | Briefing Map</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;600;700&family=Google+Sans+Text:wght@400;500;700&family=Roboto+Mono:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="assets/aurora.css">
+<script>
+  (function () {
+    try {
+      if ((localStorage.getItem('deck-theme') || 'light') === 'dark') {
+        document.documentElement.classList.add('theme-dark');
+        document.documentElement.classList.remove('theme-light');
+      }
+    } catch (e) {}
+  })();
+</script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+  body { margin: 0; background: var(--canvas); color: var(--text); font-family: var(--font-body); -webkit-font-smoothing: antialiased; }
+  a { color: inherit; text-decoration: none; }
+
+  /* Pillar colours */
+  .p-plan { --tc: var(--g-blue);   --ti: var(--blue-ink);   --bg-grad: linear-gradient(135deg, #0D47A1 0%, #1976D2 55%, #42A5F5 100%); }
+  .p-proc { --tc: var(--g-purple); --ti: var(--purple-ink); --bg-grad: linear-gradient(135deg, #311B92 0%, #512DA8 55%, #7E57C2 100%); }
+  .p-mfg  { --tc: var(--g-green);  --ti: var(--green-ink);  --bg-grad: linear-gradient(135deg, #1B5E20 0%, #2E7D32 55%, #00AF57 100%); }
+  .p-inv  { --tc: #0097A7;         --ti: #00796B;           --bg-grad: linear-gradient(135deg, #004D40 0%, #00796B 55%, #26A69A 100%); }
+  .p-dist { --tc: var(--g-yellow); --ti: #B06000;           --bg-grad: linear-gradient(135deg, #E65100 0%, #F57C00 55%, #FFB300 100%); }
+  .p-rev  { --tc: var(--g-red);    --ti: var(--red-ink);    --bg-grad: linear-gradient(135deg, #880E4F 0%, #C62828 55%, #EF5350 100%); }
+  .theme-dark .p-inv  { --ti: #4DD0E1; }
+  .theme-dark .p-dist { --ti: #FDD663; }
+
+  /* ── masthead ─────────────────────────────────────────────────────────── */
+  .mast { position: sticky; top: 0; z-index: 50; display: flex; align-items: center; gap: 14px;
+          padding: 12px max(24px, 4vw); background: color-mix(in srgb, var(--surface) 88%, transparent);
+          backdrop-filter: blur(14px); border-bottom: 1px solid var(--border-subtle); }
+  .mast img { height: 26px; display: block; }
+  .mast-rule { width: 1px; height: 18px; background: var(--border-subtle); }
+  .mast-tag { font: 500 11px var(--font-mono); letter-spacing: 1.3px; text-transform: uppercase; color: var(--text-muted); }
+  .mast-sp { flex: 1; }
+  .btn-ghost { font: 500 13px var(--font-display); padding: 7px 14px; border-radius: 999px; cursor: pointer;
+               border: 1px solid var(--border-subtle); background: var(--surface); color: var(--text); }
+  .btn-ghost:hover { border-color: var(--g-blue); color: var(--blue-ink); }
+  .btn-cta { font: 600 13px var(--font-display); padding: 8px 16px; border-radius: 999px; background: var(--g-blue); color: #FFF; }
+  .btn-cta:hover { filter: brightness(1.06); }
+
+  .wrap { max-width: 1440px; margin: 0 auto; padding: 0 max(24px, 4vw) 56px; }
+
+  /* ── hero ─────────────────────────────────────────────────────────────── */
+  .hero { display: block; padding: 34px 0 26px; }
+  .kick { display: flex; align-items: center; gap: 10px; font: 500 11.5px var(--font-mono); letter-spacing: 1.4px; text-transform: uppercase; color: var(--text-muted); }
+  .kick i { width: 28px; height: 3px; border-radius: 2px; background: var(--gemini-spark); }
+  h1 { font: 600 clamp(30px, 3vw, 44px)/1.1 var(--font-display); letter-spacing: -0.8px; margin: 12px 0 10px; }
+  .lede { font-size: 17px; line-height: 1.5; color: var(--text-muted); margin: 0; max-width: none; }
+  .lede b { color: var(--text); font-weight: 500; }
+  .glance { display: grid; grid-template-columns: repeat(4, 1fr); background: var(--surface); border: 1px solid var(--border-subtle);
+            border-radius: 18px; box-shadow: var(--shadow-sm); overflow: hidden; }
+  .glance div { padding: 14px 16px; border-left: 1px solid var(--border-subtle); }
+  .glance div:first-child { border-left: 0; }
+  .glance b { display: block; font: 600 28px/1 var(--font-mono); color: var(--text); }
+  .glance span { display: block; margin-top: 6px; font-size: 12.5px; line-height: 1.3; color: var(--text-muted); }
+
+  /* ── the flow ─────────────────────────────────────────────────────────── */
+  .flow { position: relative; }
+  .flow > svg { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; overflow: visible; }
+  .stage { position: relative; z-index: 1; display: grid; grid-template-columns: 200px minmax(0, 1fr); gap: 24px; }
+  .gap { height: 78px; position: relative; z-index: 1; display: grid; grid-template-columns: 200px minmax(0, 1fr); gap: 24px; }
+  .gap .note { align-self: center; justify-self: center; font: 500 12.5px var(--font-display); color: var(--text-muted);
+               background: var(--canvas); border: 1px solid var(--border-subtle); border-radius: 999px; padding: 5px 14px; }
+  .gap .note b { color: var(--text); font-weight: 600; }
+
+  .sl { padding-top: 6px; }
+  .sl .n { font: 600 12px var(--font-mono); color: var(--blue-ink); letter-spacing: 1.2px; }
+  .sl h2 { font: 600 20px/1.2 var(--font-display); margin: 6px 0 4px; }
+  .sl p { margin: 0; font-size: 13px; line-height: 1.45; color: var(--text-muted); }
+
+  /* stage 1: common start */
+  .start { justify-self: center; width: min(680px, 100%); display: flex; align-items: center; gap: 18px; padding: 18px 22px;
+           background: var(--surface); border: 1px solid var(--border-subtle); border-radius: 18px; box-shadow: var(--shadow-md);
+           position: relative; transition: transform .18s, box-shadow .18s; }
+  .start::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 3px; border-radius: 18px 18px 0 0; background: var(--gemini-spark); }
+  .start:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+  .num { font: 600 13px var(--font-mono); min-width: 40px; height: 32px; border-radius: 8px; display: inline-flex; align-items: center; justify-content: center;
+         background: var(--surface-sunk); color: var(--text); flex-shrink: 0; }
+  .start h3 { margin: 0; font: 600 18px var(--font-display); }
+  .start p { margin: 3px 0 0; font-size: 13.5px; color: var(--text-muted); line-height: 1.45; }
+  .start .go { margin-left: auto; font: 600 13px var(--font-display); color: var(--blue-ink); white-space: nowrap; }
+
+  /* stage 2: 6 operating pillars (3x2 grid) */
+  .tracks { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
+  .track { background: var(--surface); border: 1px solid var(--border-subtle); border-radius: 18px; box-shadow: var(--shadow-sm);
+           overflow: hidden; display: flex; flex-direction: column; transition: opacity .2s, transform .2s, box-shadow .2s, border-color .2s; }
+  .track:hover { border-color: var(--tc); box-shadow: var(--shadow-lg); transform: translateY(-2px); }
+  .flow.hl .track { opacity: .45; }
+  .flow.hl .track.on { opacity: 1; }
+  .t-photo { position: relative; height: 112px; display: block; overflow: hidden; background: var(--bg-grad); }
+  .t-photo svg.bg-art { position: absolute; right: -8px; top: -8px; width: 140px; height: 140px; opacity: .18; color: #FFF; transition: transform .4s; }
+  .track:hover .t-photo svg.bg-art { transform: scale(1.06) rotate(-2deg); }
+  .t-photo::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(18,19,23,.08) 0%, rgba(18,19,23,.52) 100%); }
+  .t-photo .lbl { position: absolute; left: 18px; bottom: 13px; right: 18px; z-index: 1; color: #FFF; }
+  .t-photo .lbl small { display: block; font: 500 10.5px var(--font-mono); letter-spacing: 1.3px; text-transform: uppercase; opacity: .92; }
+  .t-photo .lbl strong { display: block; font: 600 20px/1.15 var(--font-display); margin-top: 3px; }
+  .t-photo .bar { position: absolute; left: 0; right: 0; bottom: 0; height: 4px; background: var(--tc); z-index: 1; }
+  .t-for { padding: 12px 18px 4px; font-size: 12.5px; color: var(--text-muted); line-height: 1.4; }
+  .t-for b { color: var(--ti); font-weight: 600; }
+  .steps { list-style: none; margin: 0; padding: 6px 12px 12px; position: relative; flex: 1; display: flex; flex-direction: column; }
+  .steps a { display: flex; align-items: center; gap: 11px; padding: 6.5px 8px; border-radius: 10px; position: relative; }
+  .steps a:hover { background: var(--surface-sunk); }
+  .steps li:not(:last-child) a::after { content: ""; position: absolute; left: 21px; top: 30px; height: 13px; width: 2px;
+                                         background: color-mix(in srgb, var(--tc) 30%, transparent); }
+  .dot { width: 26px; height: 24px; border-radius: 7px; flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center;
+         font: 600 10.5px var(--font-mono); color: var(--ti); background: color-mix(in srgb, var(--tc) 10%, var(--surface));
+         border: 1px solid color-mix(in srgb, var(--tc) 35%, transparent); }
+  .steps .nm { font: 500 13.5px/1.3 var(--font-display); color: var(--text); }
+  .steps .cnt { margin-left: auto; font: 500 10.5px var(--font-mono); color: var(--text-muted); }
+  .steps .demo { margin-top: auto; }
+  .steps .demo a { margin-top: 6px; background: color-mix(in srgb, var(--tc) 9%, var(--surface)); border: 1px solid color-mix(in srgb, var(--tc) 40%, transparent); padding: 9px 10px; }
+  .steps .demo a:hover { background: color-mix(in srgb, var(--tc) 15%, var(--surface)); }
+  .steps .demo .dot { background: var(--tc); color: #FFF; border-color: var(--tc); }
+  .steps .demo .nm { font-weight: 600; }
+  .steps .demo .nm small { display: block; font: 400 11.5px var(--font-body); color: var(--text-muted); margin-top: 2px; }
+  .badge { margin-left: auto; flex-shrink: 0; display: inline-flex; align-items: center; gap: 5px; font: 600 10px var(--font-mono);
+           letter-spacing: .7px; text-transform: uppercase; padding: 4px 8px; border-radius: 999px; background: var(--tc); color: #FFF; }
+  .badge.soft { background: var(--surface-sunk); color: var(--text-muted); border: 1px solid var(--border-subtle); }
+
+  /* stage 3: converged */
+  .shared { background: var(--surface); border: 1px solid var(--border-subtle); border-radius: 20px; box-shadow: var(--shadow-md);
+            padding: 20px; display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 2.5fr); gap: 20px; position: relative; }
+  .shared::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 3px; border-radius: 20px 20px 0 0; background: var(--gemini-spark); }
+  .grp-h { font: 500 11px var(--font-mono); letter-spacing: 1.3px; text-transform: uppercase; color: var(--text-muted); margin: 2px 0 10px; }
+  .col-a { display: flex; flex-direction: column; gap: 12px; }
+  .grid-b { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+  .tile { display: flex; flex-direction: column; gap: 8px; padding: 14px; border-radius: 14px; background: var(--surface-sunk);
+          border: 1px solid transparent; transition: border-color .16s, transform .16s, background .16s; min-height: 118px; }
+  .tile:hover { border-color: var(--g-blue); background: var(--surface); transform: translateY(-2px); }
+  .tile .top { display: flex; align-items: center; gap: 10px; }
+  .tile .top img { width: 26px; height: 26px; }
+  .tile .num { min-width: 34px; height: 26px; font-size: 11.5px; background: var(--surface); }
+  .tile h4 { margin: 0; font: 600 14.5px/1.3 var(--font-display); color: var(--text); }
+  .tile p { margin: 0; font-size: 12.5px; line-height: 1.4; color: var(--text-muted); }
+  .tile > .badge { margin: auto 0 0; align-self: flex-start; }
+  .tile .top .badge { margin-left: auto; }
+  .tile.feature { flex: 1; }
+  .avatar-row { display: flex; align-items: center; margin-top: 2px; }
+  .av { width: 32px; height: 32px; border-radius: 50%; border: 2px solid var(--surface); display: inline-flex; align-items: center; justify-content: center;
+        font: 600 11px var(--font-mono); color: #FFF; margin-left: -7px; }
+  .av:first-child { margin-left: 0; }
+  .avatar-row span.lbl-txt { margin-left: 10px; font: 500 12px var(--font-mono); color: var(--text-muted); }
+  .pills { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+  .pill { font: 500 11px var(--font-display); padding: 4px 9px; border-radius: 999px; background: var(--surface); border: 1px solid var(--border-subtle); color: var(--text); }
+  .pill:hover { border-color: var(--tc, var(--g-blue)); color: var(--ti, var(--blue-ink)); }
+
+  .legend { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; margin-top: 22px; font-size: 12.5px; color: var(--text-muted); }
+  .legend span { display: inline-flex; align-items: center; gap: 8px; }
+  .legend .badge { margin: 0; }
+  footer { margin-top: 28px; padding-top: 16px; border-top: 1px solid var(--border-subtle); display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; font-size: 12.5px; color: var(--text-muted); }
+  .footer-brand { display: inline-flex; align-items: center; gap: 12px; background: #FFFFFF; padding: 6px 14px; border-radius: 10px; border: 1px solid var(--border-subtle); }
+  .footer-brand img { height: 20px; display: block; }
+
+  /* connector lines */
+  .ln-base { fill: none; stroke-width: 3; opacity: .28; transition: opacity .2s; }
+  .ln-flow { fill: none; stroke-width: 3; stroke-linecap: round; stroke-dasharray: 1 11; animation: flow 1.1s linear infinite; transition: opacity .2s; }
+  .ln-end { transition: opacity .2s; }
+  @keyframes flow { to { stroke-dashoffset: -12; } }
+  .flow.hl [data-ln]:not(.on) { opacity: .08; }
+
+  @media (prefers-reduced-motion: reduce) { .ln-flow { animation: none; } * { transition: none !important; } }
+  @media (max-width: 1180px) {
+    .stage, .gap { grid-template-columns: 1fr; }
+    .sl { padding: 0 0 10px; } .gap .sp { display: none; }
+    .hero { grid-template-columns: 1fr; }
+    .shared { grid-template-columns: 1fr; }
+    .tracks { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  @media (max-width: 780px) { .tracks { grid-template-columns: 1fr; } .grid-b { grid-template-columns: repeat(2, 1fr); } .flow > svg { display: none; } }
+</style>
+</head>
+<body>
+
+<header class="mast">
+  <a href="index.html" style="display:flex;align-items:center;gap:12px;">
+    <img src="assets/media/wip/image25.png" alt="Google Cloud">
+    <span class="mast-rule"></span>
+    <span class="mast-tag">Executive briefing · Supply Chain</span>
+  </a>
+  <span class="mast-sp"></span>
+  <button class="btn-ghost" id="themeToggle" type="button">Dark</button>
+  <a class="btn-cta" href="slides/slide_01.html">Start the briefing →</a>
+</header>
+
+<main class="wrap">
+
+  <section class="hero">
+    <div>
+      <div class="kick"><i></i>Briefing map · End-to-End Value Stream</div>
+      <h1>Agentic Transformation for Modern Supply Chains</h1>
+      <p class="lede">One executive blueprint spanning the entire supply chain value stream. <b>Everyone starts together</b>, explores the <b>6 core operating pillars</b> with live agentic war-rooms, and <b>converges</b> on the 60-persona agentic workforce built with Gemini Enterprise.</p>
+    </div>
+  </section>
+
+  <div class="flow" id="flow">
+    <svg id="lines" aria-hidden="true"></svg>
+
+    <!-- ── 1 · COMMON START ─────────────────────────────────────────────── -->
+    <div class="stage">
+      <div class="sl"><div class="n">STAGE 1</div><h2>Everyone starts here</h2><p>The strategic thesis across all six pillars.</p></div>
+      <a class="start" id="nStart" href="slides/slide_01.html" data-start>
+        <span class="num">00</span>
+        <div><h3>Executive Overview &amp; Value Stream Spine</h3><p>Shifting from siloed ERP, WMS, and TMS dashboards to an autonomous, connected 6-pillar supply chain powered by Gemini Enterprise.</p></div>
+        <span class="go">Open →</span>
+      </a>
+    </div>
+
+    <div class="gap"><span class="sp"></span><span class="note"><b>The value stream forks</b> · explore the 6 core operating pillars</span></div>
+
+    <!-- ── 2 · SIX OPERATING PILLARS ────────────────────────────────────── -->
+    <div class="stage">
+      <div class="sl"><div class="n">STAGE 2</div><h2>6 Core Operating Pillars</h2><p>Every sub-process, persona, and agent mapped from Planning to Reverse Logistics, each with an interactive live demo.</p></div>
+      <div class="tracks">
+
+        <!-- Pillar 01: Planning & Strategy -->
+        <section class="track p-plan" data-track="planning">
+          <a class="t-photo" href="pillars/01_planning.html" data-domain="planning">
+            <svg class="bg-art" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="4"><polyline points="10,75 35,48 58,60 88,22"/><circle cx="35" cy="48" r="5" fill="currentColor"/><circle cx="58" cy="60" r="5" fill="currentColor"/><circle cx="88" cy="22" r="5" fill="currentColor"/></svg>
+            <span class="lbl"><small>Pillar 01 · 12 Personas</small><strong>Planning &amp; Strategy</strong></span><span class="bar"></span>
+          </a>
+          <div class="t-for"><b>Core Planning Lifecycle</b> · Demand signals &amp; S&amp;OP</div>
+          <ol class="steps">
+            <li><a href="pillars/01_planning.html#sub-0" data-domain="planning"><span class="dot">01</span><span class="nm">Demand Forecasting</span><span class="cnt">3 agents</span></a></li>
+            <li><a href="pillars/01_planning.html#sub-1" data-domain="planning"><span class="dot">02</span><span class="nm">Trade Promotion</span><span class="cnt">3 agents</span></a></li>
+            <li><a href="pillars/01_planning.html#sub-2" data-domain="planning"><span class="dot">03</span><span class="nm">S&amp;OP / IBP</span><span class="cnt">3 agents</span></a></li>
+            <li><a href="pillars/01_planning.html#sub-3" data-domain="planning"><span class="dot">04</span><span class="nm">Portfolio &amp; SKU</span><span class="cnt">3 agents</span></a></li>
+            <li class="demo"><a href="pillars/01_planning.html#demo" data-domain="planning" data-demo><span class="dot">05</span><span class="nm">S&amp;OP Digital War-Room<small>Outage allocation &amp; OTIF scenario brief</small></span><span class="badge">▶ Live demo</span></a></li>
+          </ol>
+        </section>
+
+        <!-- Pillar 02: Sourcing & Procurement -->
+        <section class="track p-proc" data-track="procurement">
+          <a class="t-photo" href="pillars/02_procurement.html" data-domain="procurement">
+            <svg class="bg-art" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="4"><circle cx="25" cy="50" r="14"/><circle cx="75" cy="25" r="10"/><circle cx="75" cy="75" r="10"/><line x1="38" y1="44" x2="65" y2="29"/><line x1="38" y1="56" x2="65" y2="71"/></svg>
+            <span class="lbl"><small>Pillar 02 · 9 Personas</small><strong>Sourcing &amp; Procurement</strong></span><span class="bar"></span>
+          </a>
+          <div class="t-for"><b>Procurement Spine</b> · Tier vendors &amp; EDI routing</div>
+          <ol class="steps">
+            <li><a href="pillars/02_procurement.html#sub-0" data-domain="procurement"><span class="dot">01</span><span class="nm">Supplier Network</span><span class="cnt">3 agents</span></a></li>
+            <li><a href="pillars/02_procurement.html#sub-1" data-domain="procurement"><span class="dot">02</span><span class="nm">Material &amp; Packaging</span><span class="cnt">3 agents</span></a></li>
+            <li><a href="pillars/02_procurement.html#sub-2" data-domain="procurement"><span class="dot">03</span><span class="nm">Contract &amp; PO Mgmt</span><span class="cnt">3 agents</span></a></li>
+            <li class="demo"><a href="pillars/02_procurement.html#demo" data-domain="procurement" data-demo><span class="dot">04</span><span class="nm">Disruption &amp; Expediting<small>2–3 week risk radar &amp; PO split-shipment</small></span><span class="badge">▶ Live demo</span></a></li>
+          </ol>
+        </section>
+
+        <!-- Pillar 03: Manufacturing & Production -->
+        <section class="track p-mfg" data-track="manufacturing">
+          <a class="t-photo" href="pillars/03_manufacturing.html" data-domain="manufacturing">
+            <svg class="bg-art" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="4"><rect x="14" y="42" width="72" height="40" rx="6"/><path d="M26 42V22h16v20M58 42V28h16v14"/><circle cx="34" cy="62" r="7"/><circle cx="66" cy="62" r="7"/></svg>
+            <span class="lbl"><small>Pillar 03 · 9 Personas</small><strong>Manufacturing &amp; Production</strong></span><span class="bar"></span>
+          </a>
+          <div class="t-for"><b>Intelligent Shop Floor</b> · Optimized runs &amp; QA</div>
+          <ol class="steps">
+            <li><a href="pillars/03_manufacturing.html#sub-0" data-domain="manufacturing"><span class="dot">01</span><span class="nm">Production Scheduling</span><span class="cnt">3 agents</span></a></li>
+            <li><a href="pillars/03_manufacturing.html#sub-1" data-domain="manufacturing"><span class="dot">02</span><span class="nm">Capacity Planning</span><span class="cnt">3 agents</span></a></li>
+            <li><a href="pillars/03_manufacturing.html#sub-2" data-domain="manufacturing"><span class="dot">03</span><span class="nm">Quality &amp; Compliance</span><span class="cnt">3 agents</span></a></li>
+            <li class="demo"><a href="pillars/03_manufacturing.html#demo" data-domain="manufacturing" data-demo><span class="dot">04</span><span class="nm">Changeover &amp; Defect QA<small>Allergen sequencing &amp; visual inspection</small></span><span class="badge">▶ Live demo</span></a></li>
+          </ol>
+        </section>
+
+        <!-- Pillar 04: Inventory & Warehousing -->
+        <section class="track p-inv" data-track="warehousing">
+          <a class="t-photo" href="pillars/04_warehousing.html" data-domain="warehousing">
+            <svg class="bg-art" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="4"><polygon points="50,14 86,32 86,78 14,78 14,32"/><rect x="30" y="48" width="16" height="16"/><rect x="54" y="48" width="16" height="16"/><rect x="42" y="30" width="16" height="14"/></svg>
+            <span class="lbl"><small>Pillar 04 · 9 Personas</small><strong>Inventory &amp; Warehousing</strong></span><span class="bar"></span>
+          </a>
+          <div class="t-for"><b>Dynamic Fulfillment</b> · Multi-node staging &amp; DC</div>
+          <ol class="steps">
+            <li><a href="pillars/04_warehousing.html#sub-0" data-domain="warehousing"><span class="dot">01</span><span class="nm">Positioning &amp; Optimization</span><span class="cnt">3 agents</span></a></li>
+            <li><a href="pillars/04_warehousing.html#sub-1" data-domain="warehousing"><span class="dot">02</span><span class="nm">Warehouse Operations</span><span class="cnt">3 agents</span></a></li>
+            <li><a href="pillars/04_warehousing.html#sub-2" data-domain="warehousing"><span class="dot">03</span><span class="nm">Omnichannel Visibility</span><span class="cnt">3 agents</span></a></li>
+            <li class="demo"><a href="pillars/04_warehousing.html#demo" data-domain="warehousing" data-demo><span class="dot">04</span><span class="nm">Multi-Echelon Rebalancer<small>Safety stock, SLOB &amp; dock-to-stock</small></span><span class="badge">▶ Live demo</span></a></li>
+          </ol>
+        </section>
+
+        <!-- Pillar 05: Distribution & Logistics -->
+        <section class="track p-dist" data-track="distribution">
+          <a class="t-photo" href="pillars/05_distribution.html" data-domain="distribution">
+            <svg class="bg-art" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="4"><rect x="10" y="34" width="52" height="34" rx="4"/><path d="M62 44h18l10 12v12H62z"/><circle cx="28" cy="72" r="8"/><circle cx="76" cy="72" r="8"/></svg>
+            <span class="lbl"><small>Pillar 05 · 12 Personas</small><strong>Distribution &amp; Logistics</strong></span><span class="bar"></span>
+          </a>
+          <div class="t-for"><b>CPG Route-to-Market</b> · Plant → CFA → WD → Trade</div>
+          <ol class="steps">
+            <li><a href="pillars/05_distribution.html#sub-0" data-domain="distribution"><span class="dot">01</span><span class="nm">Primary Distribution (Plant → CFA)</span><span class="cnt">3 agents</span></a></li>
+            <li><a href="pillars/05_distribution.html#sub-1" data-domain="distribution"><span class="dot">02</span><span class="nm">CFA &amp; MT/Q-Comm Fulfillment</span><span class="cnt">3 agents</span></a></li>
+            <li><a href="pillars/05_distribution.html#sub-2" data-domain="distribution"><span class="dot">03</span><span class="nm">Secondary Trade (WD → Kirana)</span><span class="cnt">3 agents</span></a></li>
+            <li><a href="pillars/05_distribution.html#sub-3" data-domain="distribution"><span class="dot">04</span><span class="nm">Fleet, Carrier &amp; Freight</span><span class="cnt">3 agents</span></a></li>
+            <li class="demo"><a href="pillars/05_distribution.html#demo" data-domain="distribution" data-demo><span class="dot">05</span><span class="nm">CPG Dispatch &amp; OTIF War-Room<small>CFA-to-WD allocation &amp; MT slot compliance</small></span><span class="badge">▶ Live demo</span></a></li>
+          </ol>
+        </section>
+
+        <!-- Pillar 06: Returns & Reverse Logistics -->
+        <section class="track p-rev" data-track="reverse">
+          <a class="t-photo" href="pillars/06_reverse.html" data-domain="reverse">
+            <svg class="bg-art" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="4"><path d="M72 32A28 28 0 1 0 78 58"/><polyline points="62,32 74,32 74,20"/><circle cx="50" cy="50" r="10"/></svg>
+            <span class="lbl"><small>Pillar 06 · 9 Personas</small><strong>Returns &amp; Reverse Logistics</strong></span><span class="bar"></span>
+          </a>
+          <div class="t-for"><b>Circularity &amp; Recovery</b> · Triage &amp; defect loops</div>
+          <ol class="steps">
+            <li><a href="pillars/06_reverse.html#sub-0" data-domain="reverse"><span class="dot">01</span><span class="nm">Returns &amp; Claims Mgmt</span><span class="cnt">3 agents</span></a></li>
+            <li><a href="pillars/06_reverse.html#sub-1" data-domain="reverse"><span class="dot">02</span><span class="nm">Expiry &amp; Markdowns</span><span class="cnt">3 agents</span></a></li>
+            <li><a href="pillars/06_reverse.html#sub-2" data-domain="reverse"><span class="dot">03</span><span class="nm">Pallet &amp; Tote Reclamation</span><span class="cnt">3 agents</span></a></li>
+            <li class="demo"><a href="pillars/06_reverse.html#demo" data-domain="reverse" data-demo><span class="dot">04</span><span class="nm">Return Fraud &amp; Circularity<small>Visual triage &amp; dynamic markdowns</small></span><span class="badge">▶ Live demo</span></a></li>
+          </ol>
+        </section>
+
+      </div>
+    </div>
+
+    <div class="gap"><span class="sp"></span><span class="note"><b>All 6 pillars converge</b> · from one agent to a 60-role agentic organisation</span></div>
+
+    <!-- ── 3 · CONVERGED CLOSE ──────────────────────────────────────────── -->
+    <div class="stage">
+      <div class="sl"><div class="n">STAGE 3</div><h2>Everyone converges here</h2><p>The 60-persona workforce map, then how we build, run, govern and deliver it.</p></div>
+      <div class="shared" id="nShared">
+        <div class="col-a">
+          <div class="grp-h">Agentic workflows &amp; workforce</div>
+          <a class="tile" href="pages/demo_stage.html" data-shared>
+            <div class="top"><span class="num">06</span><span class="badge soft">2 Live Demos</span></div>
+            <h4>Live Demo Stage: Demo 1 &amp; Demo 2</h4>
+            <p>Two dedicated demo video stages paired with live Gemini Enterprise agents and starter prompts.</p>
+          </a>
+          <a class="tile" href="pages/one_to_many.html" data-shared>
+            <div class="top"><span class="num">07</span><img src="assets/media/gcp/Agents.svg" alt=""></div>
+            <h4>From two agents to an agentic organisation</h4>
+            <p>Each pillar demo is one workflow; 60 specialized agents coordinate across the end-to-end value stream.</p>
+          </a>
+          <div class="tile feature" data-shared>
+            <a href="pages/persona_map.html" style="display:flex;flex-direction:column;gap:8px;">
+              <div class="top"><span class="num">07</span><span class="badge soft">Interactive</span></div>
+              <h4>Persona &amp; Agent Matrix: 60 Roles Mapped</h4>
+              <div class="avatar-row">
+                <span class="av" style="background:#1A73E8;">DP</span>
+                <span class="av" style="background:#7B1FA2;">PR</span>
+                <span class="av" style="background:#00AF57;">MS</span>
+                <span class="av" style="background:#0097A7;">DC</span>
+                <span class="av" style="background:#E65100;">FL</span>
+                <span class="av" style="background:#C62828;">CX</span>
+                <span class="lbl-txt">All 60 personas &amp; agents</span>
+              </div>
+            </a>
+            <div class="pills">
+              <a class="pill p-plan" href="pages/persona_map.html?pillar=planning" data-domain="planning">Planning</a>
+              <a class="pill p-proc" href="pages/persona_map.html?pillar=procurement" data-domain="procurement">Procurement</a>
+              <a class="pill p-mfg"  href="pages/persona_map.html?pillar=manufacturing" data-domain="manufacturing">Manufacturing</a>
+              <a class="pill p-inv"  href="pages/persona_map.html?pillar=warehousing" data-domain="warehousing">Warehousing</a>
+              <a class="pill p-dist" href="pages/persona_map.html?pillar=distribution" data-domain="distribution">Distribution</a>
+              <a class="pill p-rev"  href="pages/persona_map.html?pillar=reverse" data-domain="reverse">Reverse</a>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="grp-h">From personas to production</div>
+          <div class="grid-b">
+            <a class="tile" href="pages/build_01_how.html" data-shared><div class="top"><span class="num">08</span><img src="assets/media/gcp/AIMachineLearning.svg" alt=""></div><h4>How agents are built</h4><p>No-code Gems, low-code Agent Studio, high-code ADK.</p></a>
+            <a class="tile" href="pages/build_02_arch.html" data-shared><div class="top"><span class="num">09</span><img src="assets/media/gcp/HybridMulticloud.svg" alt=""></div><h4>Architecture</h4><p>Grounds across SAP, WMS, TMS, EDI, and POS.</p><span class="badge soft">Interactive</span></a>
+            <a class="tile" href="pages/build_03_models.html" data-shared><div class="top"><span class="num">10</span><img src="assets/media/gcp/VertexAI.svg" alt=""></div><h4>Model choice</h4><p>Gemini Pro, Flash &amp; Vision matched to task.</p><span class="badge soft">Interactive</span></a>
+            <a class="tile" href="pages/build_04_govern.html" data-shared><div class="top"><span class="num">11</span><img src="assets/media/gcp/SecurityIdentity.svg" alt=""></div><h4>Governance</h4><p>Identity, policy, human approval, audit trails.</p><span class="badge soft">Interactive</span></a>
+            <a class="tile" href="pages/build_05_surface.html" data-shared><div class="top"><span class="num">12</span><img src="assets/media/gcp/CloudRun.svg" alt=""></div><h4>Where people meet the agent</h4><p>Built once, used across mobile, Workspace &amp; control tower.</p></a>
+            <a class="tile" href="pages/build_06_resilience.html" data-shared><div class="top"><span class="num">13</span><img src="assets/media/gcp/Observability.svg" alt=""></div><h4>Structural resilience</h4><p>Supply chains that absorb shocks without manual chaos.</p></a>
+            <a class="tile" href="pages/build_07_why_google.html" data-shared><div class="top"><span class="num">14</span><img src="assets/media/gcp/Compute.svg" alt=""></div><h4>Why Google</h4><p>Gemini Enterprise + BigQuery + Google Maps Platform.</p></a>
+            <a class="tile" href="pages/build_08_100_days.html" data-shared><div class="top"><span class="num">15</span><img src="assets/media/gcp/Marketplace.svg" alt=""></div><h4>100 days to proof of value</h4><p>Phased pilot-to-production roadmap across pillars.</p></a>
+            <a class="tile" href="slides/slide_06_tmd_partnership.html" data-shared><div class="top"><span class="num">16</span><img src="assets/media/gcp/VertexAI.svg" alt=""></div><h4>Strategic AI &amp; Distribution Partnership</h4><p>4 active joint workstreams, status &amp; next steps (Nov 2026).</p><span class="badge soft">Executive</span></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="legend">
+    <span><span class="badge" style="--tc:var(--g-blue)">▶ Live demo</span> interactive war-room simulation</span>
+    <span><span class="badge soft">Interactive</span> filterable matrix &amp; architecture explorer</span>
+  </div>
+
+  <footer>
+    <span>Google Cloud · Executive briefing for Supply Chain &amp; Operations leaders</span>
+    <span class="footer-brand">
+      <img src="assets/media/wip/image25.png" alt="Google Cloud">
+      <span style="width:1px;height:16px;background:#DADCE0;"></span>
+      <img src="assets/media/gemini_enterprise_logo.svg" alt="Gemini Enterprise">
+    </span>
+  </footer>
+</main>
+
+<script>
+(function () {
+  var btn = document.getElementById('themeToggle');
+  function paint() { btn.textContent = document.documentElement.classList.contains('theme-dark') ? 'Light' : 'Dark'; }
+  paint();
+  btn.addEventListener('click', function () {
+    var el = document.documentElement, dark = el.classList.toggle('theme-dark');
+    el.classList.toggle('theme-light', !dark);
+    try { localStorage.setItem('deck-theme', dark ? 'dark' : 'light'); } catch (e) {}
+    paint();
+  });
+
+  document.querySelectorAll('[data-domain]').forEach(function (a) {
+    a.addEventListener('click', function () { try { localStorage.setItem('deck-domain', a.dataset.domain); } catch (e) {} });
+  });
+
+  var C = {
+    start: document.querySelectorAll('[data-start]').length,
+    tracks: document.querySelectorAll('[data-track]').length,
+    demos: document.querySelectorAll('[data-demo]').length
+  };
+  document.querySelectorAll('[data-count]').forEach(function (b) { if (C[b.dataset.count] !== undefined) b.textContent = C[b.dataset.count]; });
+
+  /* fork + merge lines, drawn from the real card positions */
+  var flow = document.getElementById('flow'), svg = document.getElementById('lines');
+  var start = document.getElementById('nStart'), shared = document.getElementById('nShared');
+  var tracks = [].slice.call(document.querySelectorAll('.track'));
+  var NS = 'http://www.w3.org/2000/svg';
+  function el(tag, attrs) { var e = document.createElementNS(NS, tag); for (var k in attrs) e.setAttribute(k, attrs[k]); return e; }
+  function curve(x1, y1, x2, y2) { var m = (y1 + y2) / 2; return 'M' + x1 + ',' + y1 + ' C' + x1 + ',' + m + ' ' + x2 + ',' + m + ' ' + x2 + ',' + y2; }
+  function draw() {
+    while (svg.firstChild) svg.removeChild(svg.firstChild);
+    if (getComputedStyle(svg).display === 'none') return;
+    var f = flow.getBoundingClientRect(), s = start.getBoundingClientRect(), h = shared.getBoundingClientRect();
+    var sx = s.left + s.width / 2 - f.left, sy = s.bottom - f.top;
+    var hx = h.left + h.width / 2 - f.left, hy = h.top - f.top;
+    tracks.forEach(function (t, i) {
+      var r = t.getBoundingClientRect(), c = getComputedStyle(t).getPropertyValue('--tc').trim() || '#3186FF';
+      var tx = r.left + r.width / 2 - f.left, top = r.top - f.top, bot = r.bottom - f.top;
+      var off = (i - 2.5) * 10;
+      [[sx + off, sy, tx, top], [tx, bot, hx + off, hy]].forEach(function (p) {
+        var g = el('g', { 'data-ln': t.dataset.track });
+        var d = curve(p[0], p[1], p[2], p[3]);
+        g.appendChild(el('path', { d: d, stroke: c, class: 'ln-base' }));
+        g.appendChild(el('path', { d: d, stroke: c, class: 'ln-flow' }));
+        g.appendChild(el('circle', { cx: p[0], cy: p[1], r: 4, fill: c, class: 'ln-end' }));
+        g.appendChild(el('circle', { cx: p[2], cy: p[3], r: 4, fill: c, class: 'ln-end' }));
+        svg.appendChild(g);
+      });
+    });
+  }
+  tracks.forEach(function (t) {
+    t.addEventListener('mouseenter', function () {
+      flow.classList.add('hl'); t.classList.add('on');
+      svg.querySelectorAll('[data-ln="' + t.dataset.track + '"]').forEach(function (g) { g.classList.add('on'); });
+    });
+    t.addEventListener('mouseleave', function () {
+      flow.classList.remove('hl'); t.classList.remove('on');
+      svg.querySelectorAll('.on').forEach(function (g) { g.classList.remove('on'); });
+    });
+  });
+  draw();
+  window.addEventListener('resize', draw);
+  window.addEventListener('load', draw);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(draw);
+})();
+</script>
+</body>
+</html>

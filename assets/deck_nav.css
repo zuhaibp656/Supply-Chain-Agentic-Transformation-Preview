@@ -1,0 +1,136 @@
+/* Shared layout & presenter chrome for Supply Chain Agentic Transformation */
+*, *::before, *::after { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--canvas);
+  color: var(--text);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}
+a { color: inherit; text-decoration: none; }
+
+/* Pillar track accent tokens */
+.p-blue   { --tc: var(--g-blue);   --ti: var(--blue-ink); }
+.p-purple { --tc: var(--g-purple); --ti: var(--purple-ink); }
+.p-green  { --tc: var(--g-green);  --ti: var(--green-ink); }
+.p-teal   { --tc: #0097A7;         --ti: #00796B; }
+.p-amber  { --tc: var(--g-yellow); --ti: #B06000; }
+.p-red    { --tc: var(--g-red);    --ti: var(--red-ink); }
+.theme-dark .p-teal  { --ti: #4DD0E1; }
+.theme-dark .p-amber { --ti: #FDD663; }
+
+/* Masthead */
+.mast {
+  position: sticky; top: 0; z-index: 60;
+  display: flex; align-items: center; gap: 14px;
+  padding: 12px max(24px, 4vw);
+  background: color-mix(in srgb, var(--surface) 88%, transparent);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--border-subtle);
+}
+.mast img { height: 26px; display: block; }
+.mast-rule { width: 1px; height: 18px; background: var(--border-subtle); }
+.mast-tag {
+  font: 500 11px var(--font-mono);
+  letter-spacing: 1.3px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+.mast-sp { flex: 1; }
+.mast-nav { display: flex; align-items: center; gap: 8px; }
+.btn-ghost {
+  font: 500 13px var(--font-display);
+  padding: 7px 14px; border-radius: 999px; cursor: pointer;
+  border: 1px solid var(--border-subtle);
+  background: var(--surface); color: var(--text);
+  display: inline-flex; align-items: center; gap: 6px;
+}
+.btn-ghost:hover { border-color: var(--g-blue); color: var(--blue-ink); }
+.btn-cta {
+  font: 600 13px var(--font-display);
+  padding: 8px 16px; border-radius: 999px;
+  background: var(--g-blue); color: #FFF;
+  display: inline-flex; align-items: center; gap: 6px;
+}
+.btn-cta:hover { filter: brightness(1.06); }
+
+/* Main wrapper */
+.page-wrap { max-width: 1360px; margin: 0 auto; padding: 32px max(24px, 4vw) 64px; }
+
+/* Page Header */
+.page-kick {
+  display: flex; align-items: center; gap: 10px;
+  font: 600 11.5px var(--font-mono); letter-spacing: 1.4px;
+  text-transform: uppercase; color: var(--ti, var(--blue-ink));
+}
+.page-kick i { width: 28px; height: 3px; border-radius: 2px; background: var(--tc, var(--gemini-spark)); }
+.page-h1 {
+  font: 600 clamp(28px, 3vw, 42px)/1.12 var(--font-display);
+  letter-spacing: -0.7px; margin: 12px 0 10px;
+}
+.page-lede {
+  font-size: 16.5px; line-height: 1.55; color: var(--text-muted);
+  margin: 0; max-width: none;
+}
+.page-lede b { color: var(--text); font-weight: 500; }
+
+/* Cards & Grids */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: 16px;
+  padding: 22px;
+  box-shadow: var(--shadow-sm);
+}
+.card-top-accent { position: relative; overflow: hidden; }
+.card-top-accent::before {
+  content: ""; position: absolute; left: 0; right: 0; top: 0; height: 3px;
+  background: var(--tc, var(--gemini-spark));
+}
+.kpi-strip {
+  display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px; margin: 24px 0 32px;
+}
+.kpi-box {
+  background: var(--surface); border: 1px solid var(--border-subtle);
+  border-radius: 14px; padding: 18px 20px; box-shadow: var(--shadow-sm);
+}
+.kpi-box b {
+  display: block; font: 600 28px/1.1 var(--font-mono);
+  color: var(--ti, var(--blue-ink));
+}
+.kpi-box span {
+  display: block; margin-top: 6px; font-size: 13px; color: var(--text-muted);
+}
+
+/* Badges */
+.badge-pill {
+  display: inline-flex; align-items: center; gap: 5px;
+  font: 600 10.5px var(--font-mono); letter-spacing: .7px;
+  text-transform: uppercase; padding: 4px 10px; border-radius: 999px;
+  background: color-mix(in srgb, var(--tc, var(--g-blue)) 12%, var(--surface));
+  color: var(--ti, var(--blue-ink));
+  border: 1px solid color-mix(in srgb, var(--tc, var(--g-blue)) 30%, transparent);
+}
+.badge-solid {
+  background: var(--tc, var(--g-blue)); color: #FFF; border-color: transparent;
+}
+
+/* Footer with Gemini Enterprise lockup on neutral pill */
+.deck-footer {
+  margin-top: 48px; padding-top: 20px;
+  border-top: 1px solid var(--border-subtle);
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
+  gap: 16px; font-size: 12.5px; color: var(--text-muted);
+}
+.footer-brand {
+  display: inline-flex; align-items: center; gap: 14px;
+  background: #FFFFFF; padding: 6px 14px; border-radius: 10px;
+  border: 1px solid var(--border-subtle);
+}
+.footer-brand img { height: 20px; display: block; }
+
+@media (max-width: 900px) {
+  .kpi-strip { grid-template-columns: 1fr; }
+  .mast-tag { display: none; }
+}
